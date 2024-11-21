@@ -29,12 +29,18 @@
     }
 
     .main-title {
-      font-size: 2.5em;
+      font-size: 2.2em;
       font-weight: 800;
       background: linear-gradient(45deg, #1E88E5, #1565C0);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin: 0;
+    }
+
+    @media (max-width: 400px) {
+      .main-title {
+        font-size: 1.8em;
+      }
     }
 
     .spinning-emoji {
@@ -778,15 +784,13 @@
       50% { transform: translateY(-5px); }
     }
   </style>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
 <body>
   <div class="main-container">
     <div class="title-section">
-      <h1 class="main-title">
-        <span class="spinning-emoji">🌀</span>
-        RoR Spinwheel
-        <span class="spinning-emoji">🌀</span>
-      </h1>
+      <h1 class="main-title">RoR Spinwheel</h1>
     </div>
     <div class="input-section">
       <label for="name-input" class="input-label">Enter Your Name Deer</label>
@@ -816,6 +820,22 @@
     <div id="prize-list"></div>
 
     <script>
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyAMDrAWHkRkQ2Ap8N6yodQHHb_Q0pNsWps",
+        authDomain: "ror-spinwheel.firebaseapp.com",
+        databaseURL: "https://ror-spinwheel-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "ror-spinwheel",
+        storageBucket: "ror-spinwheel.firebasestorage.app",
+        messagingSenderId: "834771668101",
+        appId: "1:834771668101:web:2aa42314e9c841f01badec",
+        measurementId: "G-47GG296S9Z"
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const database = firebase.database();
+
       const nameInput = document.getElementById("name-input");
       const spinButton = document.getElementById("spin-btn");
       const resultDiv = document.getElementById("result");
@@ -836,89 +856,150 @@
         { name: "3 Bonus Points", color: "#64B5F6", probability: 8 } // Lighter Blue
       ];
 
-      const spunNames = new Map(JSON.parse(localStorage.getItem('winnerLog') || '[]'));
-
       function updateWinnerLog() {
         const winnersLog = document.getElementById("winners-log");
         winnersLog.innerHTML = '';
         
-        // Convert Map entries to array and sort by timestamp (newest first)
-        const entries = Array.from(spunNames.entries()).reverse();
-        
-        entries.forEach(([name, prizeData]) => {
-          const newRow = document.createElement("div");
-          newRow.className = 'winner-entry';
-          
-          // Get prize details
-          const prize = prizes.find(p => p.name === prizeData.prize);
-          const isUltimate = prize && prize.isUltimate;
-          
-          // Add ultimate class if it's an ultimate prize
-          if (isUltimate) {
-            newRow.classList.add('ultimate-winner');
-          }
-          
-          // Get appropriate emoji
-          let emoji = '🎉';
-          if (prizeData.prize.includes('Crab Army Sticker')) emoji = '🦀';
-          else if (prizeData.prize.includes('Pengbee Love Bite')) emoji = '👅';
-          else if (prizeData.prize.includes('Chetoes')) emoji = '🧀';
-          else if (prizeData.prize.includes('3 Points')) emoji = '✨';
-          else if (prizeData.prize.includes('5 Points')) emoji = '💫';
-          else if (prizeData.prize.includes('10 Points')) emoji = '🌟';
-          else if (prizeData.prize.includes('25 Bonus Points')) emoji = '🌈';
-          
-          newRow.innerHTML = `${emoji} ${name} won ${prizeData.prize} <span class="timestamp">${prizeData.timestamp}</span>`;
-          winnersLog.appendChild(newRow);
-        });
+        database.ref('winners').orderByChild('timestamp').limitToLast(50).once('value')
+          .then((snapshot) => {
+            const entries = [];
+            snapshot.forEach((childSnapshot) => {
+              entries.unshift({
+                name: childSnapshot.key,
+                ...childSnapshot.val()
+              });
+            });
+            
+            entries.forEach((entry) => {
+              const newRow = document.createElement("div");
+              newRow.className = 'winner-entry';
+              
+              // Get prize details
+              const prize = prizes.find(p => p.name === entry.prize);
+              const isUltimate = prize && prize.isUltimate;
+              
+              // Add ultimate class if it's an ultimate prize
+              if (isUltimate) {
+                newRow.classList.add('ultimate-winner');
+              }
+              
+              // Get appropriate emoji
+              let emoji = '🎉';
+              if (entry.prize.includes('Crab Army Sticker')) emoji = '🦀';
+              else if (entry.prize.includes('Pengbee Love Bite')) emoji = '👅';
+              else if (entry.prize.includes('Chetoes')) emoji = '🧀';
+              else if (entry.prize.includes('3 Points')) emoji = '✨';
+              else if (entry.prize.includes('5 Points')) emoji = '💫';
+              else if (entry.prize.includes('10 Points')) emoji = '🌟';
+              else if (entry.prize.includes('25 Bonus Points')) emoji = '🌈';
+              
+              newRow.innerHTML = `${emoji} ${entry.name} won ${entry.prize} <span class="timestamp">${new Date(entry.timestamp).toLocaleString()}</span>`;
+              winnersLog.appendChild(newRow);
+            });
+          });
       }
 
-      // Load winners on page load
-      window.addEventListener('load', () => {
+      // Listen for real-time updates
+      database.ref('winners').on('child_added', () => {
         updateWinnerLog();
       });
 
-      function populatePrizeList() {
-        const prizeListDiv = document.getElementById("prize-list");
-        prizeListDiv.className = 'prize-list-container';
+      // Load winners on page load
+      window.addEventListener('load', updateWinnerLog);
+
+      nameInput.addEventListener("input", () => {
+        const name = nameInput.value.trim();
         
-        // Add title
-        const titleDiv = document.createElement('div');
-        titleDiv.className = 'prize-list-title';
-        titleDiv.textContent = '🎁 Prize Pool & Probabilities 🎲';
-        prizeListDiv.appendChild(titleDiv);
+        // Check if name exists in Firebase
+        database.ref('winners/' + name).once('value')
+          .then((snapshot) => {
+            const nameExists = snapshot.exists();
+            spinButton.disabled = name === "" || nameExists;
+            resultDiv.textContent = nameExists ? "You have already spun the wheel!" : "";
+          });
+      });
 
-        // Create grid container
-        const gridDiv = document.createElement('div');
-        gridDiv.className = 'prize-grid';
-        prizeListDiv.appendChild(gridDiv);
+      spinButton.addEventListener("click", () => {
+        const name = nameInput.value.trim();
+        if (!name || database.ref('winners/' + name).exists()) return;
 
-        prizes.forEach(prize => {
-          const prizeItem = document.createElement("div");
-          prizeItem.className = `prize-item ${prize.isUltimate ? 'ultimate-prize' : ''}`;
+        spinButton.disabled = true;
+        resultDiv.textContent = "";
+        resultDiv.classList.remove('show-prize');
 
-          const prizeColor = document.createElement("span");
-          prizeColor.className = "prize-color";
-          prizeColor.style.backgroundColor = prize.color;
+        const randomIndex = weightedRandomIndex();
+        const selectedPrize = prizes[randomIndex];
 
-          const prizeInfo = document.createElement("div");
-          prizeInfo.className = "prize-info";
+        // Calculate rotation to align the selected segment at 80 degrees (slightly above right side)
+        const segmentAngle = 360 / prizes.length;
+        // Calculate base rotation needed for the selected segment
+        const baseRotation = -(randomIndex * segmentAngle) + 80;
+        // Add exactly 10 full rotations (3600 degrees) plus the base rotation
+        const spinDegrees = 3600 + baseRotation;
+        
+        // Reset the transition and transform before applying new spin
+        wheelCanvas.style.transition = "none";
+        wheelCanvas.style.transform = "rotate(0deg)";
+        // Force a reflow to ensure the reset takes effect
+        wheelCanvas.offsetHeight;
+        
+        // Apply the new spin with transition
+        wheelCanvas.style.transition = "transform 5s cubic-bezier(0.17, 0.67, 0.83, 0.67)";
+        wheelCanvas.style.transform = `rotate(${spinDegrees}deg)`;
 
-          const prizeName = document.createElement("span");
-          prizeName.className = "prize-name";
-          prizeName.textContent = prize.name;
+        // Update the timeout to match the spin duration
+        setTimeout(() => {
+          const isUltimate = selectedPrize.isUltimate;
+          resultDiv.setAttribute('data-ultimate', isUltimate);
+          
+          // Create message with animated emojis
+          const message = `
+            <div class="prize-message">
+              <span class="prize-emoji" data-ultimate="${isUltimate}">🎉</span>
+              <span class="prize-emoji" data-ultimate="${isUltimate}">✨</span>
+              Congratulations ${name}!
+              <span class="prize-emoji" data-ultimate="${isUltimate}">✨</span>
+              <span class="prize-emoji" data-ultimate="${isUltimate}">🎉</span>
+            </div>
+            <div class="prize-message">
+              You have won ${selectedPrize.name}
+            </div>
+          `;
+          
+          resultDiv.innerHTML = message;
+          resultDiv.classList.add('show-prize');
+          const timestamp = Date.now();
+          const winData = {
+            prize: selectedPrize.name,
+            timestamp: timestamp
+          };
+          
+          // Save to Firebase
+          database.ref('winners/' + name).set(winData);
+          
+          nameInput.value = "";
+          spinButton.disabled = false;
+        }, 5000);
+      });
 
-          const probability = document.createElement("span");
-          probability.className = "prize-probability";
-          probability.textContent = `${prize.probability}%`;
-
-          prizeInfo.appendChild(prizeName);
-          prizeInfo.appendChild(probability);
-
-          prizeItem.appendChild(prizeColor);
-          prizeItem.appendChild(prizeInfo);
-          gridDiv.appendChild(prizeItem);
-        });
+      function weightedRandomIndex() {
+        // Calculate total probability
+        const totalProbability = prizes.reduce((sum, prize) => sum + prize.probability, 0);
+        
+        // Generate a random number between 0 and total probability
+        const random = Math.random() * totalProbability;
+        
+        // Find the prize that corresponds to the random value
+        let currentSum = 0;
+        for (let i = 0; i < prizes.length; i++) {
+          currentSum += prizes[i].probability;
+          if (random <= currentSum) {
+            return i;
+          }
+        }
+        
+        // Fallback to last prize (shouldn't normally happen due to rounding)
+        return prizes.length - 1;
       }
 
       function drawWheel() {
@@ -999,119 +1080,51 @@
         });
       }
 
-      function weightedRandomIndex() {
-        // Calculate total probability
-        const totalProbability = prizes.reduce((sum, prize) => sum + prize.probability, 0);
+      function populatePrizeList() {
+        const prizeListDiv = document.getElementById("prize-list");
+        prizeListDiv.className = 'prize-list-container';
         
-        // Generate a random number between 0 and total probability
-        const random = Math.random() * totalProbability;
-        
-        // Find the prize that corresponds to the random value
-        let currentSum = 0;
-        for (let i = 0; i < prizes.length; i++) {
-          currentSum += prizes[i].probability;
-          if (random <= currentSum) {
-            return i;
-          }
-        }
-        
-        // Fallback to last prize (shouldn't normally happen due to rounding)
-        return prizes.length - 1;
-      }
+        // Add title
+        const titleDiv = document.createElement('div');
+        titleDiv.className = 'prize-list-title';
+        titleDiv.textContent = '🎁 Prize Pool & Probabilities 🎲';
+        prizeListDiv.appendChild(titleDiv);
 
-      function testProbabilityDistribution() {
-        const results = new Array(prizes.length).fill(0);
-        const iterations = 10000;
-        
-        for (let i = 0; i < iterations; i++) {
-          const index = weightedRandomIndex();
-          results[index]++;
-        }
-        
-        console.log("Probability Distribution Test Results:");
-        prizes.forEach((prize, index) => {
-          const actualPercentage = (results[index] / iterations) * 100;
-          console.log(`${prize.name}: Expected ${prize.probability}%, Actual ${actualPercentage.toFixed(1)}%`);
+        // Create grid container
+        const gridDiv = document.createElement('div');
+        gridDiv.className = 'prize-grid';
+        prizeListDiv.appendChild(gridDiv);
+
+        prizes.forEach(prize => {
+          const prizeItem = document.createElement("div");
+          prizeItem.className = `prize-item ${prize.isUltimate ? 'ultimate-prize' : ''}`;
+
+          const prizeColor = document.createElement("span");
+          prizeColor.className = "prize-color";
+          prizeColor.style.backgroundColor = prize.color;
+
+          const prizeInfo = document.createElement("div");
+          prizeInfo.className = "prize-info";
+
+          const prizeName = document.createElement("span");
+          prizeName.className = "prize-name";
+          prizeName.textContent = prize.name;
+
+          const probability = document.createElement("span");
+          probability.className = "prize-probability";
+          probability.textContent = `${prize.probability}%`;
+
+          prizeInfo.appendChild(prizeName);
+          prizeInfo.appendChild(probability);
+
+          prizeItem.appendChild(prizeColor);
+          prizeItem.appendChild(prizeInfo);
+          gridDiv.appendChild(prizeItem);
         });
       }
 
       drawWheel();
       populatePrizeList();
-
-      nameInput.addEventListener("input", () => {
-        const name = nameInput.value.trim();
-        spinButton.disabled = name === "" || spunNames.has(name);
-
-        resultDiv.textContent = spunNames.has(name)
-          ? "You have already spun the wheel!"
-          : "";
-      });
-
-      spinButton.addEventListener("click", () => {
-        const name = nameInput.value.trim();
-        if (!name || spunNames.has(name)) return;
-
-        spinButton.disabled = true;
-        resultDiv.textContent = "";
-        resultDiv.classList.remove('show-prize');
-
-        const randomIndex = weightedRandomIndex();
-        const selectedPrize = prizes[randomIndex];
-
-        // Calculate rotation to align the selected segment at 80 degrees (slightly above right side)
-        const segmentAngle = 360 / prizes.length;
-        // Calculate base rotation needed for the selected segment
-        const baseRotation = -(randomIndex * segmentAngle) + 80;
-        // Add exactly 10 full rotations (3600 degrees) plus the base rotation
-        const spinDegrees = 3600 + baseRotation;
-        
-        // Reset the transition and transform before applying new spin
-        wheelCanvas.style.transition = "none";
-        wheelCanvas.style.transform = "rotate(0deg)";
-        // Force a reflow to ensure the reset takes effect
-        wheelCanvas.offsetHeight;
-        
-        // Apply the new spin with transition
-        wheelCanvas.style.transition = "transform 5s cubic-bezier(0.17, 0.67, 0.83, 0.67)";
-        wheelCanvas.style.transform = `rotate(${spinDegrees}deg)`;
-
-        // Update the timeout to match the spin duration
-        setTimeout(() => {
-          const isUltimate = selectedPrize.isUltimate;
-          resultDiv.setAttribute('data-ultimate', isUltimate);
-          
-          // Create message with animated emojis
-          const message = `
-            <div class="prize-message">
-              <span class="prize-emoji" data-ultimate="${isUltimate}">🎉</span>
-              <span class="prize-emoji" data-ultimate="${isUltimate}">✨</span>
-              Congratulations ${name}!
-              <span class="prize-emoji" data-ultimate="${isUltimate}">✨</span>
-              <span class="prize-emoji" data-ultimate="${isUltimate}">🎉</span>
-            </div>
-            <div class="prize-message">
-              You have won ${selectedPrize.name}
-            </div>
-          `;
-          
-          resultDiv.innerHTML = message;
-          resultDiv.classList.add('show-prize');
-          const timestamp = new Date().toLocaleString();
-          spunNames.set(name, { 
-            prize: selectedPrize.name, 
-            timestamp: timestamp 
-          });
-          
-          // Save to localStorage
-          localStorage.setItem('winnerLog', JSON.stringify(Array.from(spunNames.entries())));
-          
-          updateWinnerLog();
-          nameInput.value = "";
-          spinButton.disabled = false;
-        }, 5000);
-      });
-
-      testProbabilityDistribution();
     </script>
   </div>
 </body>
