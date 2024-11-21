@@ -86,6 +86,9 @@
         0 0 0 16px rgba(0, 0, 0, 0.1),
         inset 0 0 30px rgba(0, 0, 0, 0.2);
       animation: wheelGlow 3s infinite;
+      transition: transform 8s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+      transform-origin: center;
+      will-change: transform;
     }
 
     @keyframes wheelGlow {
@@ -304,9 +307,9 @@
     }
 
     @keyframes ultimateEmojiWiggle {
-      0%, 100% { transform: rotate(0deg) scale(1); }
-      25% { transform: rotate(-12deg) scale(1.1); }
-      75% { transform: rotate(12deg) scale(1.1); }
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-12deg); }
+      75% { transform: rotate(12deg); }
     }
 
     hr {
@@ -646,26 +649,33 @@
       overflow: hidden;
     }
 
-    .winner-entry::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      height: 100%;
-      width: 4px;
-      background: var(--prize-color, #1976D2);
+    .winner-entry .winner-name {
+      font-weight: 700;
+      color: #1976D2;
     }
 
-    .winner-entry::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      height: 100%;
-      width: 100%;
-      background: var(--prize-color, #1976D2);
-      opacity: 0.05;
-      z-index: 0;
+    .winner-entry .prize-name {
+      margin: 0 8px;
+      color: #333;
+    }
+
+    .winner-entry .timestamp {
+      color: #666;
+      font-size: 0.85em;
+    }
+
+    .winner-entry.ultimate-winner {
+      background: linear-gradient(135deg, #fff6e6, #fff9f0);
+      border: 1px solid #ffd700;
+    }
+
+    .winner-entry.ultimate-winner .winner-name {
+      color: #ff6b6b;
+    }
+
+    .winner-entry .prize-emoji {
+      margin-right: 8px;
+      font-size: 1.2em;
     }
 
     .winner-entry:hover {
@@ -783,6 +793,37 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-5px); }
     }
+
+    .clear-button {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9em;
+      margin-left: 10px;
+      transition: all 0.3s ease;
+      display: none;
+    }
+
+    .clear-button.visible {
+      display: inline-block;
+    }
+
+    .admin-login {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      font-size: 1.2em;
+      cursor: pointer;
+      opacity: 0.3;
+      transition: opacity 0.3s ease;
+    }
+
+    .admin-login:hover {
+      opacity: 1;
+    }
   </style>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -810,7 +851,10 @@
     <div class="separator"></div>
 
     <div id="winners-log">
-      <h2>🏆 Winners Log 🏆</h2>
+      <div class="winners-header">
+        <h2>🏆 Winners Log 🏆</h2>
+        <button class="clear-button" onclick="clearEntries()">Clear All Entries</button>
+      </div>
       <div id="winners-container"></div>
     </div>
 
@@ -818,6 +862,8 @@
 
     <h2>Prize Pool and their Probability</h2>
     <div id="prize-list"></div>
+
+    <div class="admin-login" onclick="adminLogin()">⚙️</div>
 
     <script>
       // Firebase configuration
@@ -857,8 +903,8 @@
       ];
 
       function updateWinnerLog() {
-        const winnersLog = document.getElementById("winners-log");
-        winnersLog.innerHTML = '';
+        const winnersContainer = document.getElementById("winners-container");
+        winnersContainer.innerHTML = '';
         
         database.ref('winners').orderByChild('timestamp').limitToLast(50).once('value')
           .then((snapshot) => {
@@ -883,18 +929,28 @@
                 newRow.classList.add('ultimate-winner');
               }
               
-              // Get appropriate emoji
+              // Get appropriate emoji based on prize
               let emoji = '🎉';
-              if (entry.prize.includes('Crab Army Sticker')) emoji = '🦀';
-              else if (entry.prize.includes('Pengbee Love Bite')) emoji = '👅';
-              else if (entry.prize.includes('Chetoes')) emoji = '🧀';
-              else if (entry.prize.includes('3 Points')) emoji = '✨';
-              else if (entry.prize.includes('5 Points')) emoji = '💫';
-              else if (entry.prize.includes('10 Points')) emoji = '🌟';
-              else if (entry.prize.includes('25 Bonus Points')) emoji = '🌈';
+              if (entry.prize.includes('Lovebite from Pengbee')) emoji = '👅';
+              else if (entry.prize.includes('Crab Army Sticker') && !entry.prize.includes('3')) emoji = '🦀';
+              else if (entry.prize.includes('25 Bonus Points')) emoji = '💎';
+              else if (entry.prize.includes('5 Bonus Points')) emoji = '💫';
+              else if (entry.prize.includes('Kiss from King Crab')) emoji = '💋';
+              else if (entry.prize.includes('Chetoes Sticker')) emoji = '🧀';
+              else if (entry.prize.includes('3 Crab Army Stickers')) emoji = '💎';
+              else if (entry.prize.includes('10 Bonus Points')) emoji = '🌟';
+              else if (entry.prize.includes('3 Bonus Points')) emoji = '✨';
               
-              newRow.innerHTML = `${emoji} ${entry.name} won ${entry.prize} <span class="timestamp">${new Date(entry.timestamp).toLocaleString()}</span>`;
-              winnersLog.appendChild(newRow);
+              newRow.innerHTML = `
+                <div class="winner-info">
+                  <span class="prize-emoji">${emoji}</span>
+                  <span class="winner-name">${entry.name}</span>
+                  <span class="prize-name">won ${entry.prize}</span>
+                </div>
+                <span class="timestamp">${new Date(entry.timestamp).toLocaleString()}</span>
+              `;
+              
+              winnersContainer.appendChild(newRow);
             });
           });
       }
@@ -919,67 +975,74 @@
           });
       });
 
+      let currentRotation = 0;
+
       spinButton.addEventListener("click", () => {
         const name = nameInput.value.trim();
-        if (!name || database.ref('winners/' + name).exists()) return;
+        if (!name) return;
 
-        spinButton.disabled = true;
-        resultDiv.textContent = "";
-        resultDiv.classList.remove('show-prize');
+        // Check if name exists before spinning
+        database.ref('winners/' + name).once('value').then((snapshot) => {
+          if (snapshot.exists()) {
+            resultDiv.textContent = "You have already spun the wheel!";
+            return;
+          }
 
-        const randomIndex = weightedRandomIndex();
-        const selectedPrize = prizes[randomIndex];
+          spinButton.disabled = true;
+          resultDiv.textContent = "";
+          resultDiv.classList.remove('show-prize');
 
-        // Calculate rotation to align the selected segment at 80 degrees (slightly above right side)
-        const segmentAngle = 360 / prizes.length;
-        // Calculate base rotation needed for the selected segment
-        const baseRotation = -(randomIndex * segmentAngle) + 80;
-        // Add exactly 10 full rotations (3600 degrees) plus the base rotation
-        const spinDegrees = 3600 + baseRotation;
-        
-        // Reset the transition and transform before applying new spin
-        wheelCanvas.style.transition = "none";
-        wheelCanvas.style.transform = "rotate(0deg)";
-        // Force a reflow to ensure the reset takes effect
-        wheelCanvas.offsetHeight;
-        
-        // Apply the new spin with transition
-        wheelCanvas.style.transition = "transform 5s cubic-bezier(0.17, 0.67, 0.83, 0.67)";
-        wheelCanvas.style.transform = `rotate(${spinDegrees}deg)`;
+          const randomIndex = weightedRandomIndex();
+          const selectedPrize = prizes[randomIndex];
 
-        // Update the timeout to match the spin duration
-        setTimeout(() => {
-          const isUltimate = selectedPrize.isUltimate;
-          resultDiv.setAttribute('data-ultimate', isUltimate);
+          // Get current rotation from the wheel's transform
+          const currentTransform = wheelCanvas.style.transform;
+          currentRotation = currentTransform ? parseInt(currentTransform.match(/rotate\(([-\d.]+)deg\)/)?.[1] || 0) : 0;
+
+          // Calculate rotation to align the selected segment with the pointer (at 80 degrees)
+          const segmentAngle = 360 / prizes.length;
+          const targetRotation = -(randomIndex * segmentAngle) + 80;
           
-          // Create message with animated emojis
-          const message = `
-            <div class="prize-message">
-              <span class="prize-emoji" data-ultimate="${isUltimate}">🎉</span>
-              <span class="prize-emoji" data-ultimate="${isUltimate}">✨</span>
-              Congratulations ${name}!
-              <span class="prize-emoji" data-ultimate="${isUltimate}">✨</span>
-              <span class="prize-emoji" data-ultimate="${isUltimate}">🎉</span>
-            </div>
-            <div class="prize-message">
-              You have won ${selectedPrize.name}
-            </div>
-          `;
-          
-          resultDiv.innerHTML = message;
-          resultDiv.classList.add('show-prize');
-          const timestamp = Date.now();
-          const winData = {
-            prize: selectedPrize.name,
-            timestamp: timestamp
-          };
-          
-          // Save to Firebase
-          database.ref('winners/' + name).set(winData);
-          
-          nameInput.value = "";
-          spinButton.disabled = false;
-        }, 5000);
+          // Add 10 full rotations (3600 degrees) plus what's needed to reach the target
+          const spinDegrees = currentRotation + 3600 + (targetRotation - (currentRotation % 360));
+
+          // Apply the spin
+          wheelCanvas.style.transform = `rotate(${spinDegrees}deg)`;
+
+          // Update the timeout to match the new spin duration (8 seconds)
+          setTimeout(() => {
+            const isUltimate = selectedPrize.isUltimate;
+            resultDiv.setAttribute('data-ultimate', isUltimate);
+            
+            // Create message with animated emojis
+            const message = `
+              <div class="prize-message">
+                <span class="prize-emoji" data-ultimate="${isUltimate}">🎉</span>
+                <span class="prize-emoji" data-ultimate="${isUltimate}">✨</span>
+                Congratulations ${name}!
+                <span class="prize-emoji" data-ultimate="${isUltimate}">✨</span>
+                <span class="prize-emoji" data-ultimate="${isUltimate}">🎉</span>
+              </div>
+              <div class="prize-message">
+                You have won ${selectedPrize.name}
+              </div>
+            `;
+            
+            resultDiv.innerHTML = message;
+            resultDiv.classList.add('show-prize');
+            const timestamp = Date.now();
+            const winData = {
+              prize: selectedPrize.name,
+              timestamp: timestamp
+            };
+            
+            // Save to Firebase
+            database.ref('winners/' + name).set(winData);
+            
+            nameInput.value = "";
+            spinButton.disabled = false;
+          }, 8000);  // Match the CSS transition duration
+        });
       });
 
       function weightedRandomIndex() {
@@ -1121,6 +1184,39 @@
           prizeItem.appendChild(prizeInfo);
           gridDiv.appendChild(prizeItem);
         });
+      }
+
+      // Admin password - you should change this to something secure
+      const ADMIN_PASSWORD = 'kingcrab';
+      let isAdmin = false;
+
+      function adminLogin() {
+        const password = prompt('Enter admin password:');
+        if (password === ADMIN_PASSWORD) {
+          isAdmin = true;
+          document.querySelector('.clear-button').classList.add('visible');
+        } else if (password !== null) {  // Only show error if user didn't click Cancel
+          alert('Incorrect password');
+        }
+      }
+
+      function clearEntries() {
+        if (!isAdmin) {
+          alert('Admin access required');
+          return;
+        }
+
+        if (confirm('Are you sure you want to clear all entries? This cannot be undone.')) {
+          database.ref('winners').remove()
+            .then(() => {
+              console.log('All entries cleared successfully');
+              updateWinnerLog(); // Refresh the display
+            })
+            .catch((error) => {
+              console.error('Error clearing entries:', error);
+              alert('Error clearing entries. Please try again.');
+            });
+        }
       }
 
       drawWheel();
