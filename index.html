@@ -258,6 +258,15 @@
       box-shadow: 0 10px 30px rgba(255,215,0,0.2);
     }
 
+    #result.show-prize[data-ultimate-rare="true"] {
+      background: linear-gradient(135deg, rgba(255,105,180,0.2), rgba(255,105,180,0.1));
+      border: 2px solid rgba(255,105,180,0.5);
+      color: #4A0025;
+      text-shadow: 0 0 10px rgba(255,105,180,0.3);
+      animation: ultimatePrizeReveal 0.8s ease-out, shimmerPink 2s infinite;
+      box-shadow: 0 10px 30px rgba(255,105,180,0.2);
+    }
+
     @keyframes prizeReveal {
       0% {
         opacity: 0;
@@ -301,9 +310,29 @@
       }
     }
 
+    @keyframes shimmerPink {
+      0% {
+        background: linear-gradient(135deg, rgba(255,105,180,0.2), rgba(255,105,180,0.1));
+        border-color: rgba(255,105,180,0.5);
+      }
+      50% {
+        background: linear-gradient(135deg, rgba(255,105,180,0.3), rgba(255,105,180,0.2));
+        border-color: rgba(255,105,180,0.7);
+      }
+      100% {
+        background: linear-gradient(135deg, rgba(255,105,180,0.2), rgba(255,105,180,0.1));
+        border-color: rgba(255,105,180,0.5);
+      }
+    }
+
     .prize-emoji[data-ultimate="true"] {
       animation: ultimateEmojiWiggle 1.5s infinite;
       filter: drop-shadow(0 0 5px rgba(255,215,0,0.5));
+    }
+
+    .prize-emoji[data-ultimate-rare="true"] {
+      animation: ultimateEmojiWiggle 1.5s infinite;
+      filter: drop-shadow(0 0 5px rgba(255,105,180,0.5));
     }
 
     @keyframes ultimateEmojiWiggle {
@@ -371,16 +400,125 @@
     .prize-item {
       display: flex;
       align-items: center;
-      padding: 12px 15px;
       background: white;
-      border-radius: 10px;
-      transition: transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border-radius: 15px;
+      padding: 15px;
+      margin: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
 
-    .prize-item:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    .prize-item.ultimate-prize-gold {
+      background: linear-gradient(135deg, #ffd700, #ffa500);
+      color: white;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      animation: shine 2s infinite;
+      border: 2px solid #ffd700;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    }
+
+    .prize-item.ultimate-prize-rare {
+      background: linear-gradient(135deg, #FF69B4, #ffffff, #FF69B4);
+      background-size: 200% 200%;
+      color: #333;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      animation: shine 3s infinite;
+      border: 2px solid #FF69B4;
+      box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+    }
+
+    .prize-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      position: relative;
+    }
+
+    .prize-name {
+      margin-right: 12px;
+      font-size: 1.1em;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .prize-item.ultimate-prize-gold .prize-name {
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow: 
+        0 0 5px rgba(255, 215, 0, 0.5),
+        0 0 10px rgba(255, 215, 0, 0.3);
+      font-size: 1.15em;
+      letter-spacing: 0.5px;
+    }
+
+    .prize-item.ultimate-prize-rare .prize-name {
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow: 
+        0 0 5px rgba(255, 105, 180, 0.5),
+        0 0 10px rgba(255, 105, 180, 0.3);
+      font-size: 1.15em;
+      letter-spacing: 0.5px;
+    }
+
+    .prize-item:not(.ultimate-prize-gold):not(.ultimate-prize-rare) .prize-name {
+      color: #2c3e50;
+    }
+
+    .prize-probability {
+      font-size: 0.9em;
+      padding: 4px 8px;
+      border-radius: 12px;
+      margin-left: auto;
+      background: #f0f0f0;
+      min-width: 70px;
+      text-align: right;
+    }
+
+    .prize-item.ultimate-prize-gold .prize-probability,
+    .prize-item.ultimate-prize-rare .prize-probability {
+      background: rgba(255, 255, 255, 0.3);
+      font-weight: bold;
+    }
+
+    .prize-item.ultimate-prize-gold .prize-probability {
+      color: #B8860B;
+    }
+
+    .prize-item.ultimate-prize-rare .prize-probability {
+      color: #FF1493;
+    }
+
+    @keyframes shine {
+      0% { background-position: 200% center; }
+      50% { background-position: 0% center; }
+      100% { background-position: -200% center; }
+    }
+
+    .prize-item.ultimate-prize-gold::before,
+    .prize-item.ultimate-prize-rare::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.6),
+        transparent
+      );
+      animation: shine-effect 2s infinite;
+    }
+
+    @keyframes shine-effect {
+      0% { left: -100%; }
+      100% { left: 200%; }
     }
 
     .prize-color {
@@ -389,39 +527,6 @@
       border-radius: 50%;
       margin-right: 12px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .prize-info {
-      flex-grow: 1;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .prize-name {
-      font-weight: 500;
-      color: #333;
-    }
-
-    .prize-probability {
-      background: #f0f0f0;
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-size: 0.9em;
-      color: #666;
-      min-width: 45px;
-      text-align: center;
-    }
-
-    .ultimate-prize {
-      background: linear-gradient(45deg, #FFD700, #FFA500);
-      color: white;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-    }
-
-    .ultimate-prize .prize-probability {
-      background: rgba(255,255,255,0.2);
-      color: white;
     }
 
     /* Input section styling */
@@ -636,62 +741,83 @@
     }
 
     .winner-entry {
-      background: white;
-      margin: 15px 0;
-      padding: 15px 20px;
+      padding: 12px 15px;
+      margin: 8px 0;
       border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-      transition: all 0.3s ease;
+      background: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: relative;
-      overflow: hidden;
+      flex-direction: column;
+      align-items: flex-start;
     }
 
-    .winner-entry .winner-name {
-      font-weight: 700;
+    .winner-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .winner-name-container {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .winner-name {
+      font-weight: 600;
+      font-size: 1.1em;
       color: #1976D2;
     }
 
-    .winner-entry .prize-name {
-      margin: 0 8px;
-      color: #333;
-    }
-
-    .winner-entry .timestamp {
+    .winner-prize {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 1.1em;
       color: #666;
-      font-size: 0.85em;
     }
 
-    .winner-entry.ultimate-winner {
-      background: linear-gradient(135deg, #fff6e6, #fff9f0);
-      border: 1px solid #ffd700;
+    .winner-entry.ultimate-winner-gold .winner-name,
+    .winner-entry.ultimate-winner-gold .winner-prize {
+      color: #3D2B00;
+      font-weight: 700;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
     }
 
-    .winner-entry.ultimate-winner .winner-name {
-      color: #ff6b6b;
+    .winner-entry.ultimate-winner-rare .winner-name,
+    .winner-entry.ultimate-winner-rare .winner-prize {
+      color: #4A0025;
+      font-weight: 700;
+      text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
     }
 
-    .winner-entry .prize-emoji {
-      margin-right: 8px;
-      font-size: 1.2em;
+    .winner-timestamp {
+      font-size: 0.8em;
+      color: #999;
+      margin-top: 4px;
+      align-self: flex-end;
     }
 
-    .winner-entry:hover {
-      transform: translateX(5px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    .winner-entry.ultimate-winner-gold .winner-timestamp {
+      color: rgba(61, 43, 0, 0.7);
     }
 
-    .winner-entry.ultimate {
-      background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,223,0,0.05));
-      border: 1px solid rgba(255,215,0,0.3);
-      animation: ultimateGlow 2s infinite;
+    .winner-entry.ultimate-winner-rare .winner-timestamp {
+      color: rgba(74, 0, 37, 0.7);
     }
 
-    @keyframes ultimateGlow {
-      0%, 100% { box-shadow: 0 4px 8px rgba(255,215,0,0.2); }
-      50% { box-shadow: 0 4px 16px rgba(255,215,0,0.4); }
+    .prize-emoji {
+      font-size: 1.3em;
+      animation: emoji-bounce 1s infinite;
+    }
+
+    @keyframes emoji-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
     }
 
     .winner-content {
@@ -710,6 +836,257 @@
     .winner-prize {
       color: #666;
       font-style: italic;
+      font-weight: 600;
+      font-size: 1.1em;
+      display: block;
+    }
+
+    .prize-icon {
+      margin-left: 15px;
+      font-size: 1.5em;
+      opacity: 0.8;
+      z-index: 1;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .winner-entry.premium {
+      background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,223,0,0.05));
+      border: 1px solid rgba(255,215,0,0.4);
+      animation: premiumShimmer 3s infinite;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .winner-entry.premium::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background: linear-gradient(to bottom, #ffd700, #ffa500);
+    }
+
+    .winner-entry.premium::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%);
+      animation: rotateGradient 8s linear infinite;
+      pointer-events: none;
+    }
+
+    .winner-entry.premium .winner-name {
+      background: linear-gradient(45deg, #ffd700, #ffa500);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+    }
+
+    .winner-entry.premium .winner-prize {
+      color: #8b7355;
+    }
+
+    .winner-entry.premium .prize-icon {
+      font-size: 1.8em;
+      animation: floatIcon 2s ease-in-out infinite;
+      text-shadow: 0 0 10px rgba(255,215,0,0.5);
+    }
+
+    @keyframes premiumShimmer {
+      0% { box-shadow: 0 4px 8px rgba(255,215,0,0.2); }
+      50% { box-shadow: 0 8px 20px rgba(255,215,0,0.4); }
+      100% { box-shadow: 0 4px 8px rgba(255,215,0,0.2); }
+    }
+
+    @keyframes rotateGradient {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes floatIcon {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .clear-button {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9em;
+      margin-left: 10px;
+      transition: all 0.3s ease;
+      display: none;
+    }
+
+    .clear-button.visible {
+      display: inline-block;
+    }
+
+    .admin-login {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      font-size: 1.2em;
+      cursor: pointer;
+      opacity: 0.3;
+      transition: opacity 0.3s ease;
+    }
+
+    .admin-login:hover {
+      opacity: 1;
+    }
+
+    /* Enhanced Winner Message Styles */
+    .prize-message {
+      margin: 10px 0;
+      font-size: 1.2em;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    #result[data-ultimate="true"] .prize-message {
+      font-size: 1.4em;
+      font-weight: 700;
+      animation: prize-glow 2s infinite;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+
+    #result[data-ultimate-rare="true"] .prize-message {
+      font-size: 1.4em;
+      font-weight: 700;
+      animation: prize-glow-pink 2s infinite;
+      text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
+      color: #4A0025;
+    }
+
+    .prize-message .emoji-container {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .prize-message .prize-text {
+      margin: 0 10px;
+      text-align: center;
+    }
+
+    @keyframes prize-glow {
+      0%, 100% { text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+      50% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.6); }
+    }
+
+    @keyframes prize-glow-pink {
+      0%, 100% { 
+        text-shadow: 0 0 10px rgba(255, 105, 180, 0.5),
+                   0 0 20px rgba(255, 105, 180, 0.3); 
+      }
+      50% { 
+        text-shadow: 0 0 20px rgba(255, 105, 180, 0.7),
+                   0 0 30px rgba(255, 105, 180, 0.5); 
+      }
+    }
+
+    /* Enhanced Winners Log Styles */
+    .winner-entry {
+      padding: 12px 15px;
+      margin: 8px 0;
+      border-radius: 10px;
+      background: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+    }
+
+    .winner-entry.ultimate-winner-gold {
+      background: linear-gradient(135deg, #ffd700, #ffa500);
+      color: #3D2B00;
+      box-shadow: 0 4px 8px rgba(255, 215, 0, 0.3);
+      animation: winner-shine 2s infinite;
+      border: 2px solid rgba(255, 215, 0, 0.5);
+    }
+
+    .winner-entry.ultimate-winner-rare {
+      background: linear-gradient(135deg, #FF69B4, #ffffff, #FF69B4);
+      background-size: 200% 200%;
+      color: #333;
+      box-shadow: 0 4px 8px rgba(255, 105, 180, 0.3);
+      animation: winner-shine-pink 3s infinite;
+      border: 2px solid rgba(255, 105, 180, 0.5);
+    }
+
+    @keyframes winner-shine {
+      0% { background-position: 200% center; }
+      50% { background-position: 0% center; }
+      100% { background-position: -200% center; }
+    }
+
+    @keyframes winner-shine-pink {
+      0% { background-position: 200% center; }
+      50% { background-position: 0% center; }
+      100% { background-position: -200% center; }
+    }
+
+    .winner-entry.ultimate-winner-gold .winner-name {
+      font-weight: 700;
+      font-size: 1.1em;
+      color: #3D2B00;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    }
+
+    .winner-entry.ultimate-winner-rare .winner-name {
+      font-weight: 700;
+      font-size: 1.1em;
+      color: #4A0025;
+      text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
+    }
+
+    .winner-entry .prize-emoji {
+      font-size: 1.3em;
+      animation: emoji-bounce 1s infinite;
+    }
+
+    @keyframes emoji-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+
+    .winner-content {
+      flex: 1;
+      z-index: 1;
+    }
+
+    .winner-name {
+      color: var(--prize-color, #1976D2);
+      font-weight: 600;
+      font-size: 1.1em;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .winner-prize {
+      color: #666;
+      font-style: italic;
+      font-weight: 600;
+      font-size: 1.1em;
       display: block;
     }
 
@@ -896,10 +1273,13 @@
         { name: "25 Bonus Points", color: "#ffd700", probability: 1, isUltimate: true, ultimateClass: 'ultimate-prize-gold' },
         { name: "5 Bonus Points", color: "#90CAF9", probability: 7 }, // Very Light Blue
         { name: "a Kiss from King Crab", color: "#0D47A1", probability: 30 }, // Darkest Blue
+        { name: "50 Bonus Points", color: "#FF69B4", probability: 0.0001, isUltimate: true, ultimateClass: 'ultimate-prize-rare' },
         { name: "Chetoes Sticker", color: "#2196F3", probability: 10 }, // Medium Blue
         { name: "3 Crab Army Stickers", color: "#ffd700", probability: 1, isUltimate: true, ultimateClass: 'ultimate-prize-gold' },
+        { name: "2 Crab Army Stickers", color: "#42A5F5", probability: 3 }, // Light Blue
         { name: "10 Bonus Points", color: "#1976D2", probability: 3 }, // Dark Blue
-        { name: "3 Bonus Points", color: "#64B5F6", probability: 8 } // Lighter Blue
+        { name: "3 Bonus Points", color: "#64B5F6", probability: 8 }, // Lighter Blue
+        { name: "7 Crab Army Stickers", color: "#FF69B4", probability: 0.0001, isUltimate: true, ultimateClass: 'ultimate-prize-rare' }
       ];
 
       function updateWinnerLog() {
@@ -922,11 +1302,14 @@
               
               // Get prize details
               const prize = prizes.find(p => p.name === entry.prize);
-              const isUltimate = prize && prize.isUltimate;
+              const isUltimateGold = prize && prize.ultimateClass === 'ultimate-prize-gold';
+              const isUltimateRare = prize && prize.ultimateClass === 'ultimate-prize-rare';
               
               // Add ultimate class if it's an ultimate prize
-              if (isUltimate) {
-                newRow.classList.add('ultimate-winner');
+              if (isUltimateGold) {
+                newRow.classList.add('ultimate-winner-gold');
+              } else if (isUltimateRare) {
+                newRow.classList.add('ultimate-winner-rare');
               }
               
               // Get appropriate emoji based on prize
@@ -940,14 +1323,33 @@
               else if (entry.prize.includes('3 Crab Army Stickers')) emoji = '💎';
               else if (entry.prize.includes('10 Bonus Points')) emoji = '🌟';
               else if (entry.prize.includes('3 Bonus Points')) emoji = '✨';
+              else if (entry.prize.includes('2 Crab Army Stickers')) emoji = '🦀';
+              else if (entry.prize.includes('7 Crab Army Stickers')) emoji = '👑';
+              else if (entry.prize.includes('50 Bonus Points')) emoji = '💫';
               
+              // Format the timestamp
+              const timestamp = new Date(entry.timestamp);
+              const formattedTime = timestamp.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true 
+              });
+              const formattedDate = timestamp.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric'
+              });
+
               newRow.innerHTML = `
                 <div class="winner-info">
-                  <span class="prize-emoji">${emoji}</span>
-                  <span class="winner-name">${entry.name}</span>
-                  <span class="prize-name">won ${entry.prize}</span>
+                  <div class="winner-name-container">
+                    <span class="prize-emoji">${emoji}</span>
+                    <span class="winner-name">${entry.name}</span>
+                  </div>
+                  <div class="winner-prize">
+                    won ${entry.prize}
+                  </div>
                 </div>
-                <span class="timestamp">${new Date(entry.timestamp).toLocaleString()}</span>
+                <span class="winner-timestamp">${formattedDate} ${formattedTime}</span>
               `;
               
               winnersContainer.appendChild(newRow);
@@ -1012,19 +1414,25 @@
           // Update the timeout to match the new spin duration (8 seconds)
           setTimeout(() => {
             const isUltimate = selectedPrize.isUltimate;
-            resultDiv.setAttribute('data-ultimate', isUltimate);
+            const isUltimateRare = selectedPrize.ultimateClass === 'ultimate-prize-rare';
+            resultDiv.setAttribute('data-ultimate', isUltimate && !isUltimateRare);
+            resultDiv.setAttribute('data-ultimate-rare', isUltimateRare);
             
             // Create message with animated emojis
             const message = `
               <div class="prize-message">
-                <span class="prize-emoji" data-ultimate="${isUltimate}">🎉</span>
-                <span class="prize-emoji" data-ultimate="${isUltimate}">✨</span>
-                Congratulations ${name}!
-                <span class="prize-emoji" data-ultimate="${isUltimate}">✨</span>
-                <span class="prize-emoji" data-ultimate="${isUltimate}">🎉</span>
+                <div class="emoji-container">
+                  <span class="prize-emoji">${isUltimateRare ? '👑' : '🎉'}</span>
+                  <span class="prize-emoji">${isUltimateRare ? '✨' : '🌟'}</span>
+                </div>
+                <span class="prize-text">Congratulations ${name}!</span>
+                <div class="emoji-container">
+                  <span class="prize-emoji">${isUltimateRare ? '✨' : '🌟'}</span>
+                  <span class="prize-emoji">${isUltimateRare ? '👑' : '🎉'}</span>
+                </div>
               </div>
               <div class="prize-message">
-                You have won ${selectedPrize.name}
+                <span class="prize-text">You have won ${selectedPrize.name}</span>
               </div>
             `;
             
@@ -1082,15 +1490,19 @@
           
           if (prize.isUltimate) {
             // Create gradient for ultimate prizes
-            const gradient = ctx.createLinearGradient(0, 0, 300, 300);
             if (prize.ultimateClass === 'ultimate-prize-gold') {
+              const gradient = ctx.createLinearGradient(0, 0, 300, 300);
               gradient.addColorStop(0, '#FFD700');
               gradient.addColorStop(1, '#FFA500');
+              ctx.fillStyle = gradient;
+            } else if (prize.ultimateClass === 'ultimate-prize-rare') {
+              ctx.fillStyle = '#FF69B4';  // Solid hot pink for wheel segments
             } else {
+              const gradient = ctx.createLinearGradient(0, 0, 300, 300);
               gradient.addColorStop(0, '#FF4444');
               gradient.addColorStop(1, '#CC0000');
+              ctx.fillStyle = gradient;
             }
-            ctx.fillStyle = gradient;
           } else {
             ctx.fillStyle = prize.color;
           }
@@ -1145,44 +1557,31 @@
 
       function populatePrizeList() {
         const prizeListDiv = document.getElementById("prize-list");
-        prizeListDiv.className = 'prize-list-container';
+        prizeListDiv.innerHTML = '';
         
-        // Add title
-        const titleDiv = document.createElement('div');
-        titleDiv.className = 'prize-list-title';
-        titleDiv.textContent = '🎁 Prize Pool & Probabilities 🎲';
-        prizeListDiv.appendChild(titleDiv);
-
-        // Create grid container
-        const gridDiv = document.createElement('div');
-        gridDiv.className = 'prize-grid';
-        prizeListDiv.appendChild(gridDiv);
-
         prizes.forEach(prize => {
           const prizeItem = document.createElement("div");
-          prizeItem.className = `prize-item ${prize.isUltimate ? 'ultimate-prize' : ''}`;
-
-          const prizeColor = document.createElement("span");
-          prizeColor.className = "prize-color";
-          prizeColor.style.backgroundColor = prize.color;
-
-          const prizeInfo = document.createElement("div");
-          prizeInfo.className = "prize-info";
-
-          const prizeName = document.createElement("span");
-          prizeName.className = "prize-name";
-          prizeName.textContent = prize.name;
-
-          const probability = document.createElement("span");
-          probability.className = "prize-probability";
-          probability.textContent = `${prize.probability}%`;
-
-          prizeInfo.appendChild(prizeName);
-          prizeInfo.appendChild(probability);
-
-          prizeItem.appendChild(prizeColor);
-          prizeItem.appendChild(prizeInfo);
-          gridDiv.appendChild(prizeItem);
+          prizeItem.className = "prize-item";
+          
+          if (prize.isUltimate) {
+            if (prize.ultimateClass === 'ultimate-prize-gold') {
+              prizeItem.classList.add('ultimate-prize-gold');
+            } else if (prize.ultimateClass === 'ultimate-prize-rare') {
+              prizeItem.classList.add('ultimate-prize-rare');
+            }
+          }
+          
+          const probability = prize.probability < 1 ? prize.probability.toFixed(4) : prize.probability;
+          
+          prizeItem.innerHTML = `
+            <div class="prize-info">
+              <div class="prize-color" style="background-color: ${prize.color}"></div>
+              <div class="prize-name">${prize.name}</div>
+              <div class="prize-probability">${probability}%</div>
+            </div>
+          `;
+          
+          prizeListDiv.appendChild(prizeItem);
         });
       }
 
