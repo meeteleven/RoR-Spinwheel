@@ -1,6 +1,6 @@
 # RoR Spinwheel 🎡
 
-An interactive web-based prize wheel application with real-time Firebase integration.
+An interactive web-based prize wheel application for the game 'Real or Ruse' with real-time Firebase integration.
 
 ## Features 🌟
 
