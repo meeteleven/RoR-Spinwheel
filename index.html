@@ -290,42 +290,20 @@
     #prize-list {
       max-width: 500px;
       margin: 0 auto;
-      padding: 10px;
-    }
-
-    .prize-list-container {
-      max-width: 600px;
-      margin: 20px auto;
-      padding: 20px;
-      background: linear-gradient(145deg, #ffffff, #f0f0f0);
-      border-radius: 15px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-    }
-
-    .prize-list-title {
-      text-align: center;
-      color: #333;
-      font-size: 1.5em;
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #e0e0e0;
-    }
-
-    .prize-grid {
+      padding: 8px;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 15px;
-      padding: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 8px;
     }
 
     .prize-item {
       display: flex;
       align-items: center;
       background: white;
-      border-radius: 15px;
-      padding: 15px;
-      margin: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin: 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
@@ -335,48 +313,57 @@
     .prize-info {
       display: flex;
       align-items: center;
-      gap: 12px;
-      flex: 1;
-      position: relative;
-      min-width: 0;
-    }
-
-    .prize-name {
-      margin-right: 12px;
-      font-size: 1.1em;
-      font-weight: 600;
-      letter-spacing: 0.3px;
-      font-family: 'Montserrat', sans-serif;
-      white-space: normal;
-      overflow-wrap: break-word;
+      gap: 8px;
       flex: 1;
       min-width: 0;
     }
 
     .prize-color {
-      min-width: 24px;
-      min-height: 24px;
-      width: 24px;
-      height: 24px;
+      min-width: 16px;
+      min-height: 16px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
-      margin-right: 12px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin: 0;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
       flex-shrink: 0;
     }
 
+    .prize-name {
+      margin: 0;
+      font-size: 0.95em;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      white-space: normal;
+      overflow-wrap: break-word;
+      flex: 1;
+      min-width: 0;
+      line-height: 1.2;
+    }
+
     .prize-probability {
-      font-size: 0.9em;
-      padding: 4px 8px;
-      border-radius: 12px;
+      font-size: 0.85em;
+      padding: 2px 6px;
+      border-radius: 8px;
       margin-left: auto;
       background: #f0f0f0;
-      min-width: 70px;
+      min-width: 45px;
       text-align: right;
       flex-shrink: 0;
     }
 
+    .prize-item.ultimate-prize-gold,
+    .prize-item.ultimate-prize-rare {
+      padding: 8px 12px;
+    }
+
+    .prize-item.ultimate-prize-gold .prize-name,
+    .prize-item.ultimate-prize-rare .prize-name {
+      font-size: 0.95em;
+    }
+
     .prize-item.ultimate-prize-gold {
-      background: linear-gradient(135deg, #ffd700, #ffa500);
+      background: linear-gradient(135deg, #ffd700, #ff6b6b);
       color: white;
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
       animation: shine 2s infinite;
@@ -521,21 +508,24 @@
     }
 
     #name-input {
-      width: 100%;
-      max-width: 300px;
-      padding: 12px 20px;
-      font-size: 1.1em;
-      border: 2px solid #e0e0e0;
-      border-radius: 25px;
-      outline: none;
+      padding: 10px;
+      border: 2px solid #2196F3;
+      border-radius: 5px;
+      font-size: 16px;
+      margin-right: 10px;
       transition: all 0.3s ease;
-      background: linear-gradient(145deg, #ffffff, #f8f9fa);
-      color: #333;
-      text-align: center;
-      margin: 0 auto;
-      box-shadow: 
-        inset 0 2px 4px rgba(0,0,0,0.05),
-        0 2px 4px rgba(33, 150, 243, 0.1);
+    }
+
+    #name-input.error {
+      border-color: #ff4444;
+      background-color: #fff8f8;
+      animation: shake 0.5s;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
     }
 
     #name-input:focus {
@@ -615,36 +605,54 @@
       align-items: center;
       padding: 15px;
       margin: 10px 0;
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      transition: all 0.3s ease;
-      word-break: break-word;
-      overflow-wrap: break-word;
+      background: #f8f9fa;
+      border-radius: 6px;
+      padding: 6px 10px;
+      margin: 3px 2px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      transition: all 0.2s ease;
     }
 
-    .winner-name, .winner-prize {
-      margin: 0 10px;
-      flex: 1;
-      min-width: 0;
-      overflow-wrap: break-word;
-      word-break: break-word;
+    .winner-entry:nth-child(odd):not(.ultimate-winner-gold):not(.ultimate-winner-rare) {
+      background: linear-gradient(to right, #f0f7ff, #e1f0ff);
+      border-left: 3px solid #90caf9;
     }
 
-    .winner-name {
-      color: var(--prize-color, #1976D2);
-      font-weight: 600;
+    .winner-entry:nth-child(even):not(.ultimate-winner-gold):not(.ultimate-winner-rare) {
+      background: linear-gradient(to right, #4b89dc, #3f7ac6);
+      border-left: 3px solid #3266aa;
+      color: white;
+    }
+
+    .winner-entry:nth-child(even):not(.ultimate-winner-gold):not(.ultimate-winner-rare) .winner-name {
+      color: rgba(255, 255, 255, 0.95);
+    }
+
+    .winner-entry:nth-child(even):not(.ultimate-winner-gold):not(.ultimate-winner-rare) .winner-prize {
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .winner-entry:nth-child(even):not(.ultimate-winner-gold):not(.ultimate-winner-rare) .winner-timestamp {
+      color: rgba(255, 255, 255, 0.65);
+    }
+
+    .winner-entry .winner-name {
+      font-size: 1.15em;
+      font-weight: 500;
+      color: #1565C0;
+    }
+
+    .winner-entry .winner-prize {
       font-size: 1.1em;
-      display: block;
-      margin-bottom: 5px;
+      color: #333;
     }
 
-    .winner-prize {
-      color: #666;
-      font-style: italic;
-      font-weight: 600;
-      font-size: 1.1em;
-      display: block;
+    .winner-entry .winner-emoji {
+      font-size: 1.4em;
+      margin: 0 5px;
     }
 
     .prize-icon {
@@ -818,82 +826,28 @@
       margin: 8px 0;
       border-radius: 10px;
       background: white;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      transition: transform 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      font-size: 1.1em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .winner-entry.ultimate-winner-gold {
-      background: linear-gradient(135deg, #ffd700, #ffa500);
-      color: #3D2B00;
-      box-shadow: 0 4px 8px rgba(255, 215, 0, 0.3);
-      animation: winner-shine 2s infinite;
-      border: 2px solid rgba(255, 215, 0, 0.5);
+    .winner-entry .winner-name {
+      font-size: 1.15em;
+      font-weight: 500;
+      color: #1565C0;
     }
 
-    .winner-entry.ultimate-winner-rare {
-      background: linear-gradient(135deg, #FF69B4, #ffffff, #FF69B4);
-      background-size: 200% 200%;
+    .winner-entry .winner-prize {
+      font-size: 1.1em;
       color: #333;
-      box-shadow: 0 4px 8px rgba(255, 105, 180, 0.3);
-      animation: winner-shine-pink 3s infinite;
-      border: 2px solid rgba(255, 105, 180, 0.5);
     }
 
-    @keyframes winner-shine {
-      0% { background-position: 200% center; }
-      50% { background-position: 0% center; }
-      100% { background-position: -200% center; }
-    }
-
-    @keyframes winner-shine-pink {
-      0% { background-position: 200% center; }
-      50% { background-position: 0% center; }
-      100% { background-position: -200% center; }
-    }
-
-    .winner-entry.ultimate-winner-gold .winner-name {
-      font-weight: 700;
-      font-size: 1.1em;
-      color: #3D2B00;
-      text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-    }
-
-    .winner-entry.ultimate-winner-rare .winner-name {
-      font-weight: 700;
-      font-size: 1.1em;
-      color: #4A0025;
-      text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
-    }
-
-    .winner-entry .prize-emoji {
-      font-size: 1.3em;
-      animation: emoji-bounce 1s infinite;
-    }
-
-    @keyframes emoji-bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-3px); }
-    }
-
-    .winner-content {
-      flex: 1;
-      z-index: 1;
-    }
-
-    .winner-name {
-      color: var(--prize-color, #1976D2);
-      font-weight: 600;
-      font-size: 1.1em;
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .winner-prize {
-      color: #666;
-      font-style: italic;
-      font-weight: 600;
-      font-size: 1.1em;
-      display: block;
+    .winner-entry .winner-emoji {
+      font-size: 1.4em;
+      margin: 0 5px;
     }
 
     .prize-icon {
@@ -1163,42 +1117,121 @@
     }
 
     .ultimate-winner-gold {
-      background: linear-gradient(45deg, rgba(255, 215, 0, 0.1), rgba(255, 223, 0, 0.05));
+      background: linear-gradient(135deg, #ffd700, #ff6b6b);
+      color: white;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      animation: shine 2s infinite;
+      border: 2px solid #ffd700;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+      background-size: 200% 200%;
+      transform-style: preserve-3d;
+      perspective: 1000px;
+    }
+
+    .ultimate-winner-gold::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.6),
+        transparent
+      );
+      animation: shine 2s infinite;
+    }
+
+    .ultimate-winner-gold .winner-name {
+      color: white;
+      -webkit-text-fill-color: white;
+      background: none;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .ultimate-winner-gold .winner-prize {
+      color: white;
+      font-weight: 600;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .ultimate-winner-gold .prize-emoji {
+      font-size: 1.4em;
+      animation: floatIconGold 2s ease-in-out infinite;
+      filter: drop-shadow(0 0 10px rgba(255,215,0,0.8));
     }
 
     .ultimate-winner-rare {
-      background: linear-gradient(45deg, rgba(255, 105, 180, 0.1), rgba(255, 182, 193, 0.05));
+      background: linear-gradient(135deg, #FF69B4, #ffffff, #FF69B4);
+      background-size: 200% 200%;
+      color: #333;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      animation: shine 3s infinite;
+      border: 2px solid #FF69B4;
+      box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+      position: relative;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      perspective: 1000px;
     }
 
-    /* Prize emoji animations */
-    .winner-entry[data-prize-type="gold"] .emoji,
-    .winner-entry[data-prize-type="pink"] .emoji {
-      display: inline-block;
-      animation: prizeEmoji 2s infinite;
-      transform-origin: center;
+    .ultimate-winner-rare::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.6),
+        transparent
+      );
+      animation: shine 3s infinite;
     }
 
-    @keyframes prizeEmoji {
-      0%, 100% {
-        transform: scale(1) rotate(0deg);
-      }
-      50% {
-        transform: scale(1.2) rotate(15deg);
-      }
+    .ultimate-winner-rare .winner-name {
+      color: #333;
+      -webkit-text-fill-color: #333;
+      background: none;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
     }
 
-    #spin-btn:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-      transform: none;
+    .ultimate-winner-rare .winner-prize {
+      color: #333;
+      font-weight: 600;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
     }
 
-    #spin-btn[data-error]:disabled::after {
-      content: attr(data-error);
-      display: block;
-      font-size: 0.7em;
-      margin-top: 5px;
-      color: #ff6b6b;
+    .ultimate-winner-rare .prize-emoji {
+      font-size: 1.4em;
+      animation: floatIconRare 2s ease-in-out infinite;
+      filter: drop-shadow(0 0 10px rgba(255,105,180,0.8));
+    }
+
+    @keyframes shine {
+      0% { background-position: 200% center; }
+      50% { background-position: 0% center; }
+      100% { background-position: -200% center; }
+    }
+
+    @keyframes floatIconGold {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+
+    @keyframes floatIconRare {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
     }
 
     /* Floating banner styles */
@@ -1379,64 +1412,73 @@
       const ctx = wheelCanvas.getContext("2d");
       const prizeListDiv = document.getElementById("prize-list");
 
-      const prizes = [
-        { name: "a Lovebite from Pengbee", color: "#1565C0", probability: 30 }, // Darker Blue
-        { name: "Crab Army Sticker", color: "#42A5F5", probability: 10 }, // Light Blue
-        { name: "25 Bonus Points", color: "#ffd700", probability: 1, isUltimate: true, ultimateClass: 'ultimate-prize-gold' },
-        { name: "5 Bonus Points", color: "#90CAF9", probability: 7 }, // Very Light Blue
-        { name: "a Kiss from King Crab", color: "#0D47A1", probability: 30 }, // Darkest Blue
-        { name: "50 Bonus Points", color: "#FF69B4", probability: 0.0001, isUltimate: true, ultimateClass: 'ultimate-prize-rare' },
-        { name: "Chetoes Sticker", color: "#2196F3", probability: 10 }, // Medium Blue
-        { name: "3 Crab Army Stickers", color: "#ffd700", probability: 1, isUltimate: true, ultimateClass: 'ultimate-prize-gold' },
-        { name: "2 Crab Army Stickers", color: "#42A5F5", probability: 3 }, // Light Blue
-        { name: "10 Bonus Points", color: "#1976D2", probability: 3 }, // Dark Blue
-        { name: "3 Bonus Points", color: "#64B5F6", probability: 8 }, // Lighter Blue
-        { name: "7 Crab Army Stickers", color: "#FF69B4", probability: 0.0001, isUltimate: true, ultimateClass: 'ultimate-prize-rare' }
-      ];
+      // Initialize the Set to track used names
+      const usedNames = new Set();
+      let lastUpdateTime = 0;
 
       function updateWinnerLog() {
+        const now = Date.now();
+        if (now - lastUpdateTime < 1000) return; // Prevent rapid updates
+        lastUpdateTime = now;
+        
         const winnersContainer = document.getElementById("winners-container");
         winnersContainer.innerHTML = '';
         
         database.ref('winners').orderByChild('timestamp').limitToLast(50).once('value')
           .then((snapshot) => {
             const entries = [];
+            const seenNames = new Set();
+            
             snapshot.forEach((childSnapshot) => {
-              entries.unshift({
-                name: childSnapshot.key,
-                ...childSnapshot.val()
+              entries.push({
+                name: childSnapshot.val().name,
+                prize: childSnapshot.val().prize,
+                timestamp: childSnapshot.val().timestamp
               });
             });
             
-            entries.forEach((entry) => {
+            // Sort by timestamp (newest first)
+            entries.sort((a, b) => b.timestamp - a.timestamp);
+            
+            // Create a new array with only unique names (keeping most recent)
+            const uniqueEntries = [];
+            entries.forEach(entry => {
+              const nameLower = entry.name.toLowerCase();
+              if (!seenNames.has(nameLower)) {
+                seenNames.add(nameLower);
+                uniqueEntries.push(entry);
+              }
+            });
+            
+            // Update the usedNames Set for spin validation
+            usedNames.clear();
+            uniqueEntries.forEach(entry => {
+              usedNames.add(entry.name.toLowerCase());
+            });
+            
+            // Display entries
+            uniqueEntries.forEach((entry) => {
               const newRow = document.createElement("div");
               newRow.className = 'winner-entry';
               
-              // Get prize details
+              // Get prize details and apply styling
               const prize = prizes.find(p => p.name === entry.prize);
-              const isUltimateGold = prize && prize.ultimateClass === 'ultimate-prize-gold';
-              const isUltimateRare = prize && prize.ultimateClass === 'ultimate-prize-rare';
-              
-              // Add ultimate class if it's an ultimate prize
-              if (isUltimateGold) {
-                newRow.classList.add('ultimate-winner-gold');
-              } else if (isUltimateRare) {
-                newRow.classList.add('ultimate-winner-rare');
+              if (prize) {
+                if (prize.ultimateClass === 'ultimate-prize-gold') {
+                  newRow.classList.add('ultimate-winner-gold');
+                } else if (prize.ultimateClass === 'ultimate-prize-rare') {
+                  newRow.classList.add('ultimate-winner-rare');
+                }
               }
               
-              // Get appropriate emoji based on prize
+              // Get appropriate emoji
               let emoji = '🎉';
-              let prizeType = '';
-              
               if (entry.prize.includes('7 Crab Army Stickers')) {
                 emoji = '💎💎💎';
-                prizeType = 'pink';
               } else if (entry.prize.includes('50 Bonus Points')) {
                 emoji = '💎💎💎';
-                prizeType = 'pink';
               } else if (entry.prize.includes('Gold')) {
                 emoji = '🏆';
-                prizeType = 'gold';
               } else if (entry.prize.includes('Lovebite from Pengbee')) {
                 emoji = '👅';
               } else if (entry.prize.includes('Crab Army Sticker') && !entry.prize.includes('3')) {
@@ -1458,35 +1500,11 @@
               } else if (entry.prize.includes('2 Crab Army Stickers')) {
                 emoji = '🦀';
               }
-              
-              // Set the prize type as a data attribute
-              if (prizeType) {
-                newRow.setAttribute('data-prize-type', prizeType);
-              }
-              
-              // Format the timestamp
-              const timestamp = new Date(entry.timestamp);
-              const formattedTime = timestamp.toLocaleTimeString('en-US', { 
-                hour: '2-digit', 
-                minute: '2-digit',
-                hour12: true 
-              });
-              const formattedDate = timestamp.toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric'
-              });
 
               newRow.innerHTML = `
-                <div class="winner-info">
-                  <div class="winner-name-container">
-                    <span class="prize-emoji">${emoji}</span>
-                    <span class="winner-name">${entry.name}</span>
-                  </div>
-                  <div class="winner-prize">
-                    won ${entry.prize}
-                  </div>
-                </div>
-                <span class="winner-timestamp">${formattedDate} ${formattedTime}</span>
+                <span class="winner-emoji">${emoji}</span>
+                <span class="winner-name">${entry.name}</span>
+                <span class="winner-prize">won ${entry.prize}</span>
               `;
               
               winnersContainer.appendChild(newRow);
@@ -1494,32 +1512,55 @@
           });
       }
 
-      // Listen for real-time updates
+      // Remove previous listeners if any exist
+      database.ref('winners').off('child_added');
+      
+      // Set up single listener for real-time updates
       database.ref('winners').on('child_added', () => {
         updateWinnerLog();
       });
 
-      // Load winners on page load
-      window.addEventListener('load', updateWinnerLog);
+      // Initial load
+      updateWinnerLog();
+
+      const prizes = [
+        { name: "a Lovebite from Pengbee", color: "#1565C0", probability: 30 }, // Darker Blue
+        { name: "Crab Army Sticker", color: "#42A5F5", probability: 10 }, // Light Blue
+        { name: "25 Bonus Points", color: "#ffd700", probability: 1, isUltimate: true, ultimateClass: 'ultimate-prize-gold' },
+        { name: "5 Bonus Points", color: "#90CAF9", probability: 7 }, // Very Light Blue
+        { name: "a Kiss from King Crab", color: "#0D47A1", probability: 30 }, // Darkest Blue
+        { name: "50 Bonus Points", color: "#FF69B4", probability: 0.0001, isUltimate: true, ultimateClass: 'ultimate-prize-rare' },
+        { name: "Chetoes Sticker", color: "#2196F3", probability: 10 }, // Medium Blue
+        { name: "3 Crab Army Stickers", color: "#ffd700", probability: 1, isUltimate: true, ultimateClass: 'ultimate-prize-gold' },
+        { name: "2 Crab Army Stickers", color: "#42A5F5", probability: 3 }, // Light Blue
+        { name: "10 Bonus Points", color: "#1976D2", probability: 3 }, // Dark Blue
+        { name: "3 Bonus Points", color: "#64B5F6", probability: 8 }, // Lighter Blue
+        { name: "7 Crab Army Stickers", color: "#FF69B4", probability: 0.0001, isUltimate: true, ultimateClass: 'ultimate-prize-rare' }
+      ];
 
       let isSpinning = false;
-      let usedNames = new Set();
       let currentRotation = 0;
 
       nameInput.addEventListener("input", function() {
-        const name = this.value.trim();
-        spinButton.disabled = !name || isSpinning || usedNames.has(name.toLowerCase());
+        const name = this.value.trim().toLowerCase();
+        const nameExists = usedNames.has(name);
+        spinButton.disabled = !name || isSpinning || nameExists;
         
-        if (usedNames.has(name.toLowerCase())) {
-          spinButton.setAttribute('data-error', 'Cannot enter name twice');
+        if (nameExists) {
+          spinButton.setAttribute('data-error', 'This name has already spun the wheel');
+          nameInput.classList.add('error');
         } else {
           spinButton.removeAttribute('data-error');
+          nameInput.classList.remove('error');
         }
       });
 
       async function spinWheel() {
         const name = nameInput.value.trim();
-        if (!name || isSpinning || usedNames.has(name.toLowerCase())) return;
+        if (!name || isSpinning || usedNames.has(name.toLowerCase())) {
+          nameInput.classList.add('error');
+          return;
+        }
         
         isSpinning = true;
         spinButton.disabled = true;
