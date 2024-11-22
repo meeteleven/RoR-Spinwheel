@@ -69,10 +69,11 @@
     .wheel-container {
       position: relative;
       margin: 20px auto 60px;
-      width: min(300px, 80vw);
-      height: min(300px, 80vw);
+      width: min(280px, 75vw);
+      height: min(280px, 75vw);
       filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.2));
       transition: filter 0.3s ease;
+      transform: translateX(-10px);
     }
 
     .wheel-container:hover {
@@ -82,24 +83,12 @@
     #wheel {
       border-radius: 50%;
       box-shadow: 
-        0 0 0 15px rgba(255, 255, 255, 0.8),
-        0 0 0 16px rgba(0, 0, 0, 0.1),
-        inset 0 0 30px rgba(0, 0, 0, 0.2);
-      animation: wheelGlow 3s infinite;
+        0 0 0 12px rgba(255, 255, 255, 0.8),
+        0 0 0 13px rgba(0, 0, 0, 0.1),
+        inset 0 0 25px rgba(0, 0, 0, 0.2);
       transition: transform 8s cubic-bezier(0.17, 0.67, 0.83, 0.67);
       transform-origin: center;
       will-change: transform;
-    }
-
-    @keyframes wheelGlow {
-      0%, 100% { box-shadow: 
-        0 0 0 15px rgba(255, 255, 255, 0.8),
-        0 0 0 16px rgba(0, 0, 0, 0.1),
-        inset 0 0 30px rgba(0, 0, 0, 0.2); }
-      50% { box-shadow: 
-        0 0 0 15px rgba(255, 255, 255, 0.8),
-        0 0 0 16px rgba(0, 0, 0, 0.1),
-        inset 0 0 50px rgba(0, 0, 0, 0.3); }
     }
 
     .pointer {
@@ -107,13 +96,29 @@
       top: 50%;
       right: -40px;
       transform: translateY(-50%);
-      width: 40px;
-      height: 40px;
+      width: 35px;
+      height: 35px;
       background: linear-gradient(135deg, #ffd700, #ff6b6b);
       clip-path: polygon(0 50%, 100% 0, 100% 100%);
-      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
-      z-index: 10;
-      animation: pointerPulse 2s infinite;
+      z-index: 100;
+      filter: drop-shadow(0 0 0 3px white) 
+              drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+      animation: breathe 2s ease-in-out infinite;
+      isolation: isolate;
+    }
+
+    .pointer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: inherit;
+      clip-path: inherit;
+      filter: blur(6px);
+      opacity: 0.7;
+      z-index: -1;
     }
 
     .pointer::after {
@@ -126,59 +131,17 @@
       height: 10px;
       background: white;
       border-radius: 50%;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    @keyframes breathe {
+      0%, 100% { transform: translateY(-50%) scale(1); }
+      50% { transform: translateY(-50%) scale(1.1); }
     }
 
     @keyframes pointerPulse {
       0%, 100% { transform: translateY(-50%) scale(1); }
       50% { transform: translateY(-50%) scale(1.1); }
-    }
-
-    .wheel-outer-ring {
-      position: absolute;
-      top: -25px;
-      left: -25px;
-      right: -25px;
-      bottom: -25px;
-      border: 3px solid rgba(25, 118, 210, 0.8);
-      border-radius: 50%;
-      pointer-events: none;
-      animation: rotateRing 20s linear infinite;
-    }
-
-    .wheel-outer-ring::before {
-      content: '';
-      position: absolute;
-      top: -3px;
-      left: -3px;
-      right: -3px;
-      bottom: -3px;
-      border: 3px dashed rgba(25, 118, 210, 0.3);
-      border-radius: 50%;
-      border-style: dashed;
-      border-width: 3px;
-      border-spacing: 20px;
-      animation: rotateRingReverse 25s linear infinite;
-    }
-
-    @keyframes rotateRing {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    @keyframes rotateRingReverse {
-      from { transform: rotate(360deg); }
-      to { transform: rotate(0deg); }
-    }
-
-    /* Enhance spinning animation */
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(var(--spin-degree)); }
-    }
-
-    .spinning {
-      animation: spin var(--spin-duration) cubic-bezier(0.3, 0, 0.2, 1) forwards;
     }
 
     /* Enhanced Spin Button */
@@ -328,146 +291,6 @@
       max-width: 500px;
       margin: 0 auto;
       padding: 10px;
-    }
-
-    .prize-item {
-      background: white;
-      border-radius: 12px;
-      padding: clamp(8px, 1.5vw, 15px);
-      margin: 8px auto;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      width: 100%;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .prize-name {
-      font-size: clamp(13px, 2.8vw, 16px);
-      font-weight: 600;
-      color: #1976D2;
-      margin-right: 10px;
-      flex: 1;
-      text-align: left;
-    }
-
-    .prize-percentage {
-      font-size: clamp(12px, 2.5vw, 14px);
-      color: #666;
-      white-space: nowrap;
-      min-width: 45px;
-      text-align: right;
-    }
-
-    @media (max-width: 480px) {
-      #prize-list {
-        padding: 5px;
-      }
-
-      .prize-item {
-        padding: 8px 12px;
-        margin: 6px auto;
-      }
-
-      .prize-name {
-        font-size: clamp(11px, 2.5vw, 14px);
-      }
-
-      .prize-percentage {
-        font-size: clamp(10px, 2.2vw, 12px);
-      }
-    }
-
-    /* Winner's list styling */
-    #winners-container {
-      max-width: 500px;
-      margin: 0 auto;
-      padding: 10px;
-    }
-
-    .winner-entry {
-      background: white;
-      border-radius: 15px;
-      padding: clamp(10px, 2vw, 20px);
-      margin: 15px auto;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      transition: all 0.3s ease;
-      gap: 5px;
-    }
-
-    .winner-name {
-      font-size: clamp(14px, 3vw, 18px);
-      font-weight: 600;
-      color: #1976D2;
-      margin-right: 10px;
-      flex: 1;
-      min-width: 120px;
-      word-break: break-word;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .winner-name .emoji {
-      display: inline-flex;
-      align-items: center;
-      font-size: 1.2em;
-      line-height: 1;
-    }
-
-    .winner-prize {
-      font-size: clamp(12px, 2.5vw, 16px);
-      color: #666;
-      flex: 1;
-      min-width: 120px;
-      word-break: break-word;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .winner-prize .emoji {
-      display: inline-flex;
-      align-items: center;
-      font-size: 1.2em;
-      line-height: 1;
-    }
-
-    .winner-timestamp {
-      font-size: clamp(10px, 2vw, 14px);
-      color: #999;
-      width: 100%;
-      text-align: right;
-      margin-top: 5px;
-    }
-
-    /* Additional responsive adjustments */
-    @media (max-width: 480px) {
-      .winner-entry {
-        flex-direction: column;
-        text-align: center;
-        gap: 8px;
-      }
-
-      .winner-name, .winner-prize {
-        margin-right: 0;
-        margin-bottom: 0;
-        min-width: unset;
-        width: 100%;
-        justify-content: center;
-      }
-
-      .winner-timestamp {
-        text-align: center;
-      }
     }
 
     .prize-list-container {
@@ -1217,31 +1040,134 @@
     #winners-container {
       max-width: 500px;
       margin: 0 auto;
-      padding: 10px;
+      padding: 12px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      max-height: 400px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #1976D2 #f0f0f0;
     }
 
-    .section-separator {
-      width: 80%;
-      max-width: 500px;
-      margin: 50px auto;
-      height: 2px;
+    #winners-container::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    #winners-container::-webkit-scrollbar-track {
+      background: #f0f0f0;
+      border-radius: 10px;
+    }
+
+    #winners-container::-webkit-scrollbar-thumb {
+      background: #1976D2;
+      border-radius: 10px;
+    }
+
+    #winners-container::-webkit-scrollbar-thumb:hover {
+      background: #1565C0;
+    }
+
+    .winner-entry {
+      background: #f8f9fa;
+      border-radius: 6px;
+      padding: 6px 10px;
+      margin: 3px 2px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      transition: all 0.2s ease;
+    }
+
+    .winner-info {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      gap: 6px;
+    }
+
+    .winner-name-container {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+      flex: 0 1 auto;
+    }
+
+    .prize-emoji {
+      font-size: 13px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .winner-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: #1976D2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .winner-prize {
+      font-size: 11px;
+      color: #666;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+
+    .winner-timestamp {
+      font-size: 10px;
+      color: #999;
+      align-self: flex-end;
     }
 
     @media (max-width: 480px) {
-      .section-container,
-      #prize-list,
-      #winners-container {
-        padding: 5px;
+      .winner-entry {
+        padding: 4px 8px;
+        margin: 2px 1px;
       }
 
-      .section-title {
-        padding: 0 5px;
-        margin: 20px auto;
+      .winner-info {
+        flex-wrap: wrap;
+        gap: 2px;
       }
 
-      .section-separator {
-        margin: 30px auto;
+      .winner-name-container {
+        flex: 1 1 100%;
       }
+
+      .winner-prize {
+        font-size: 9px;
+        white-space: normal;
+        line-height: 1.2;
+      }
+
+      .winner-name {
+        font-size: 10px;
+        white-space: normal;
+        line-height: 1.2;
+      }
+
+      .winner-timestamp {
+        font-size: 8px;
+        margin-top: 1px;
+      }
+
+      .prize-emoji {
+        font-size: 10px;
+      }
+    }
+
+    .ultimate-winner-gold {
+      background: linear-gradient(45deg, rgba(255, 215, 0, 0.1), rgba(255, 223, 0, 0.05));
+    }
+
+    .ultimate-winner-rare {
+      background: linear-gradient(45deg, rgba(255, 105, 180, 0.1), rgba(255, 182, 193, 0.05));
     }
 
     /* Prize emoji animations */
@@ -1397,7 +1323,6 @@
     <div id="result" aria-live="polite"></div>
 
     <div class="wheel-container">
-      <div class="wheel-outer-ring"></div>
       <div class="pointer"></div>
       <canvas id="wheel" width="300" height="300"></canvas>
     </div>
