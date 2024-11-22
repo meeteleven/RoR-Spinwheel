@@ -69,8 +69,8 @@
     .wheel-container {
       position: relative;
       margin: 20px auto 60px;
-      width: 300px;
-      height: 300px;
+      width: min(300px, 80vw);
+      height: min(300px, 80vw);
       filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.2));
       transition: filter 0.3s ease;
     }
@@ -181,197 +181,295 @@
       animation: spin var(--spin-duration) cubic-bezier(0.3, 0, 0.2, 1) forwards;
     }
 
+    /* Enhanced Spin Button */
     #spin-btn {
-      margin-top: 10px;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      background-color: #28a745;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      text-align: center;
-    }
-
-    #spin-btn:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-
-    #result {
-      text-align: center;
-      margin: 30px auto;
-      max-width: 600px;
-      min-height: 60px;
-      font-size: 1.4em;
+      margin: 20px auto;
+      display: block;
+      margin-top: 15px;
+      padding: 15px 40px;
+      font-size: 1.2em;
       font-weight: 600;
-      color: #1976D2;
-      padding: 20px;
-      border-radius: 15px;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.5s ease;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      letter-spacing: 0.5px;
-      line-height: 1.4;
+      color: white;
+      background: linear-gradient(45deg, #2196F3, #1976D2);
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 
+        0 4px 15px rgba(33, 150, 243, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      overflow: hidden;
+      animation: buttonPulse 2s infinite;
+    }
+
+    #spin-btn:hover:not(:disabled) {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 
+        0 6px 20px rgba(33, 150, 243, 0.4),
+        inset 0 2px 4px rgba(255, 255, 255, 0.3);
+      background: linear-gradient(45deg, #1E88E5, #1565C0);
+    }
+
+    #spin-btn:active:not(:disabled) {
+      transform: translateY(1px);
+      box-shadow: 
+        0 2px 10px rgba(33, 150, 243, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    }
+
+    #spin-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.4),
+        transparent
+      );
+      animation: shine 3s infinite;
+    }
+
+    @keyframes buttonPulse {
+      0%, 100% {
+        box-shadow: 
+          0 4px 15px rgba(33, 150, 243, 0.3),
+          inset 0 2px 4px rgba(255, 255, 255, 0.3);
+      }
+      50% {
+        box-shadow: 
+          0 4px 25px rgba(33, 150, 243, 0.5),
+          inset 0 2px 4px rgba(255, 255, 255, 0.3);
+      }
+    }
+
+    @keyframes shine {
+      100% { left: 200%; }
+    }
+
+    /* Glowing Separator */
+    .section-separator {
+      width: 80%;
+      max-width: 500px;
+      margin: 50px auto;
+      height: 2px;
+      background: linear-gradient(90deg, 
+        transparent,
+        rgba(33, 150, 243, 0.8),
+        rgba(66, 165, 245, 1),
+        rgba(33, 150, 243, 0.8),
+        transparent
+      );
+      position: relative;
+      animation: separatorGlow 3s infinite;
+    }
+
+    @keyframes separatorGlow {
+      0%, 100% {
+        box-shadow: 
+          0 0 10px rgba(33, 150, 243, 0.3),
+          0 0 20px rgba(33, 150, 243, 0.2),
+          0 0 30px rgba(33, 150, 243, 0.1);
+        opacity: 1;
+      }
+      50% {
+        box-shadow: 
+          0 0 15px rgba(33, 150, 243, 0.4),
+          0 0 25px rgba(33, 150, 243, 0.3),
+          0 0 35px rgba(33, 150, 243, 0.2);
+        opacity: 0.8;
+      }
+    }
+
+    /* Section Titles */
+    .section-title {
+      text-align: center;
+      font-size: 2em;
+      margin: 30px auto;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 15px;
+      max-width: 500px;
+      padding: 0 10px;
     }
 
-    .prize-message {
-      display: inline-block;
-      margin: 5px 0;
+    .section-title .text {
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      background: linear-gradient(45deg, #1976D2, #2196F3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    .prize-emoji {
-      display: inline-block;
-      font-size: 1.2em;
-      vertical-align: middle;
-      margin: 0 8px;
-      animation: emojiWiggle 1s infinite;
-      transform-origin: center;
+    .section-title .emoji {
+      font-size: 1.1em;
+      animation: floatEmoji 3s ease-in-out infinite;
+      background: none;
+      -webkit-background-clip: unset;
+      -webkit-text-fill-color: unset;
     }
 
-    @keyframes emojiWiggle {
-      0%, 100% { transform: rotate(0deg); }
-      25% { transform: rotate(-10deg); }
-      75% { transform: rotate(10deg); }
-    }
-
-    #result.show-prize {
-      opacity: 1;
-      transform: translateY(0);
-      background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(240,240,240,0.95));
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      border: 1px solid rgba(25,118,210,0.2);
-      animation: prizeReveal 0.5s ease-out;
-    }
-
-    #result.show-prize[data-ultimate="true"] {
-      background: linear-gradient(135deg, rgba(255,223,0,0.2), rgba(255,215,0,0.1));
-      border: 2px solid rgba(255,215,0,0.5);
-      color: #B8860B;
-      text-shadow: 0 0 10px rgba(255,215,0,0.3);
-      animation: ultimatePrizeReveal 0.8s ease-out, shimmerGold 2s infinite;
-      box-shadow: 0 10px 30px rgba(255,215,0,0.2);
-    }
-
-    #result.show-prize[data-ultimate-rare="true"] {
-      background: linear-gradient(135deg, rgba(255,105,180,0.2), rgba(255,105,180,0.1));
-      border: 2px solid rgba(255,105,180,0.5);
-      color: #4A0025;
-      text-shadow: 0 0 10px rgba(255,105,180,0.3);
-      animation: ultimatePrizeReveal 0.8s ease-out, shimmerPink 2s infinite;
-      box-shadow: 0 10px 30px rgba(255,105,180,0.2);
-    }
-
-    @keyframes prizeReveal {
-      0% {
-        opacity: 0;
-        transform: translateY(20px) scale(0.95);
-      }
-      50% {
-        transform: translateY(-5px) scale(1.02);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    @keyframes ultimatePrizeReveal {
-      0% {
-        opacity: 0;
-        transform: translateY(20px) scale(0.95);
-      }
-      50% {
-        transform: translateY(-10px) scale(1.05);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    @keyframes shimmerGold {
-      0% {
-        background: linear-gradient(135deg, rgba(255,223,0,0.2), rgba(255,215,0,0.1));
-        border-color: rgba(255,215,0,0.5);
-      }
-      50% {
-        background: linear-gradient(135deg, rgba(255,215,0,0.3), rgba(255,223,0,0.2));
-        border-color: rgba(255,215,0,0.7);
-      }
-      100% {
-        background: linear-gradient(135deg, rgba(255,223,0,0.2), rgba(255,215,0,0.1));
-        border-color: rgba(255,215,0,0.5);
-      }
-    }
-
-    @keyframes shimmerPink {
-      0% {
-        background: linear-gradient(135deg, rgba(255,105,180,0.2), rgba(255,105,180,0.1));
-        border-color: rgba(255,105,180,0.5);
-      }
-      50% {
-        background: linear-gradient(135deg, rgba(255,105,180,0.3), rgba(255,105,180,0.2));
-        border-color: rgba(255,105,180,0.7);
-      }
-      100% {
-        background: linear-gradient(135deg, rgba(255,105,180,0.2), rgba(255,105,180,0.1));
-        border-color: rgba(255,105,180,0.5);
-      }
-    }
-
-    .prize-emoji[data-ultimate="true"] {
-      animation: ultimateEmojiWiggle 1.5s infinite;
-      filter: drop-shadow(0 0 5px rgba(255,215,0,0.5));
-    }
-
-    .prize-emoji[data-ultimate-rare="true"] {
-      animation: ultimateEmojiWiggle 1.5s infinite;
-      filter: drop-shadow(0 0 5px rgba(255,105,180,0.5));
-    }
-
-    @keyframes ultimateEmojiWiggle {
-      0%, 100% { transform: rotate(0deg); }
-      25% { transform: rotate(-12deg); }
-      75% { transform: rotate(12deg); }
-    }
-
-    hr {
-      border: 0;
-      height: 2px;
-      background: #ccc;
-      margin: 20px 0;
-    }
-
-    table {
-      margin-top: 20px;
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 10px;
-      text-align: left;
-    }
-
-    th {
-      background-color: #f4f4f4;
-    }
-
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-
-    tr:nth-child(odd) {
-      background-color: #ffffff;
+    @keyframes floatEmoji {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
     }
 
     /* Prize list styling */
+    #prize-list {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 10px;
+    }
+
+    .prize-item {
+      background: white;
+      border-radius: 12px;
+      padding: clamp(8px, 1.5vw, 15px);
+      margin: 8px auto;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .prize-name {
+      font-size: clamp(13px, 2.8vw, 16px);
+      font-weight: 600;
+      color: #1976D2;
+      margin-right: 10px;
+      flex: 1;
+      text-align: left;
+    }
+
+    .prize-percentage {
+      font-size: clamp(12px, 2.5vw, 14px);
+      color: #666;
+      white-space: nowrap;
+      min-width: 45px;
+      text-align: right;
+    }
+
+    @media (max-width: 480px) {
+      #prize-list {
+        padding: 5px;
+      }
+
+      .prize-item {
+        padding: 8px 12px;
+        margin: 6px auto;
+      }
+
+      .prize-name {
+        font-size: clamp(11px, 2.5vw, 14px);
+      }
+
+      .prize-percentage {
+        font-size: clamp(10px, 2.2vw, 12px);
+      }
+    }
+
+    /* Winner's list styling */
+    #winners-container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 10px;
+    }
+
+    .winner-entry {
+      background: white;
+      border-radius: 15px;
+      padding: clamp(10px, 2vw, 20px);
+      margin: 15px auto;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+      gap: 5px;
+    }
+
+    .winner-name {
+      font-size: clamp(14px, 3vw, 18px);
+      font-weight: 600;
+      color: #1976D2;
+      margin-right: 10px;
+      flex: 1;
+      min-width: 120px;
+      word-break: break-word;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .winner-name .emoji {
+      display: inline-flex;
+      align-items: center;
+      font-size: 1.2em;
+      line-height: 1;
+    }
+
+    .winner-prize {
+      font-size: clamp(12px, 2.5vw, 16px);
+      color: #666;
+      flex: 1;
+      min-width: 120px;
+      word-break: break-word;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .winner-prize .emoji {
+      display: inline-flex;
+      align-items: center;
+      font-size: 1.2em;
+      line-height: 1;
+    }
+
+    .winner-timestamp {
+      font-size: clamp(10px, 2vw, 14px);
+      color: #999;
+      width: 100%;
+      text-align: right;
+      margin-top: 5px;
+    }
+
+    /* Additional responsive adjustments */
+    @media (max-width: 480px) {
+      .winner-entry {
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+      }
+
+      .winner-name, .winner-prize {
+        margin-right: 0;
+        margin-bottom: 0;
+        min-width: unset;
+        width: 100%;
+        justify-content: center;
+      }
+
+      .winner-timestamp {
+        text-align: center;
+      }
+    }
+
     .prize-list-container {
       max-width: 600px;
       margin: 20px auto;
@@ -392,7 +490,7 @@
 
     .prize-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 15px;
       padding: 10px;
     }
@@ -408,6 +506,50 @@
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
+      word-break: break-word;
+    }
+
+    .prize-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      position: relative;
+      min-width: 0;
+    }
+
+    .prize-name {
+      margin-right: 12px;
+      font-size: 1.1em;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      font-family: 'Montserrat', sans-serif;
+      white-space: normal;
+      overflow-wrap: break-word;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .prize-color {
+      min-width: 24px;
+      min-height: 24px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      margin-right: 12px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      flex-shrink: 0;
+    }
+
+    .prize-probability {
+      font-size: 0.9em;
+      padding: 4px 8px;
+      border-radius: 12px;
+      margin-left: auto;
+      background: #f0f0f0;
+      min-width: 70px;
+      text-align: right;
+      flex-shrink: 0;
     }
 
     .prize-item.ultimate-prize-gold {
@@ -427,70 +569,6 @@
       animation: shine 3s infinite;
       border: 2px solid #FF69B4;
       box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
-    }
-
-    .prize-info {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex: 1;
-      position: relative;
-    }
-
-    .prize-name {
-      margin-right: 12px;
-      font-size: 1.1em;
-      font-weight: 600;
-      letter-spacing: 0.3px;
-      font-family: 'Montserrat', sans-serif;
-    }
-
-    .prize-item.ultimate-prize-gold .prize-name {
-      font-weight: 700;
-      color: #ffffff;
-      text-shadow: 
-        0 0 5px rgba(255, 215, 0, 0.5),
-        0 0 10px rgba(255, 215, 0, 0.3);
-      font-size: 1.15em;
-      letter-spacing: 0.5px;
-    }
-
-    .prize-item.ultimate-prize-rare .prize-name {
-      font-weight: 700;
-      color: #ffffff;
-      text-shadow: 
-        0 0 5px rgba(255, 105, 180, 0.5),
-        0 0 10px rgba(255, 105, 180, 0.3);
-      font-size: 1.15em;
-      letter-spacing: 0.5px;
-    }
-
-    .prize-item:not(.ultimate-prize-gold):not(.ultimate-prize-rare) .prize-name {
-      color: #2c3e50;
-    }
-
-    .prize-probability {
-      font-size: 0.9em;
-      padding: 4px 8px;
-      border-radius: 12px;
-      margin-left: auto;
-      background: #f0f0f0;
-      min-width: 70px;
-      text-align: right;
-    }
-
-    .prize-item.ultimate-prize-gold .prize-probability,
-    .prize-item.ultimate-prize-rare .prize-probability {
-      background: rgba(255, 255, 255, 0.3);
-      font-weight: bold;
-    }
-
-    .prize-item.ultimate-prize-gold .prize-probability {
-      color: #B8860B;
-    }
-
-    .prize-item.ultimate-prize-rare .prize-probability {
-      color: #FF1493;
     }
 
     @keyframes shine {
@@ -521,12 +599,42 @@
       100% { left: 200%; }
     }
 
-    .prize-color {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      margin-right: 12px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    .prize-item.ultimate-prize-gold .prize-probability,
+    .prize-item.ultimate-prize-rare .prize-probability {
+      background: rgba(255, 255, 255, 0.3);
+      font-weight: bold;
+    }
+
+    .prize-item.ultimate-prize-gold .prize-probability {
+      color: #B8860B;
+    }
+
+    .prize-item.ultimate-prize-rare .prize-probability {
+      color: #FF1493;
+    }
+
+    .prize-item.ultimate-prize-gold .prize-name {
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow: 
+        0 0 5px rgba(255, 215, 0, 0.5),
+        0 0 10px rgba(255, 215, 0, 0.3);
+      font-size: 1.15em;
+      letter-spacing: 0.5px;
+    }
+
+    .prize-item.ultimate-prize-rare .prize-name {
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow: 
+        0 0 5px rgba(255, 105, 180, 0.5),
+        0 0 10px rgba(255, 105, 180, 0.3);
+      font-size: 1.15em;
+      letter-spacing: 0.5px;
+    }
+
+    .prize-item:not(.ultimate-prize-gold):not(.ultimate-prize-rare) .prize-name {
+      color: #2c3e50;
     }
 
     /* Input section styling */
@@ -541,6 +649,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      margin-bottom: 40px;
     }
 
     .input-container {
@@ -592,105 +701,59 @@
       width: 100%;
       max-width: 300px;
       padding: 12px 20px;
-      font-size: 1em;
+      font-size: 1.1em;
       border: 2px solid #e0e0e0;
       border-radius: 25px;
       outline: none;
       transition: all 0.3s ease;
-      background: white;
+      background: linear-gradient(145deg, #ffffff, #f8f9fa);
       color: #333;
       text-align: center;
       margin: 0 auto;
+      box-shadow: 
+        inset 0 2px 4px rgba(0,0,0,0.05),
+        0 2px 4px rgba(33, 150, 243, 0.1);
     }
 
     #name-input:focus {
       border-color: #2196F3;
-      box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+      box-shadow: 
+        inset 0 2px 4px rgba(0,0,0,0.05),
+        0 0 0 3px rgba(33, 150, 243, 0.2);
+      transform: translateY(-1px);
     }
 
     #name-input::placeholder {
       color: #999;
+      font-style: italic;
     }
 
-    #spin-btn {
-      margin-top: 15px;
-      padding: 12px 35px;
-      font-size: 1.1em;
-      font-weight: 600;
-      color: white;
-      background: linear-gradient(45deg, #2196F3, #1976D2);
-      border: none;
-      border-radius: 25px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    #spin-btn:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-      background: linear-gradient(45deg, #1E88E5, #1565C0);
-    }
-
-    #spin-btn:active:not(:disabled) {
-      transform: translateY(1px);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    #spin-btn:disabled {
-      background: linear-gradient(45deg, #ccc, #999);
-      cursor: not-allowed;
-      transform: none;
-      opacity: 0.7;
-    }
-
-    /* Animation for input focus */
-    @keyframes inputFocus {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.02); }
-      100% { transform: scale(1); }
-    }
-
-    #name-input:focus {
-      animation: inputFocus 0.3s ease;
-    }
-
-    @media (max-width: 400px) {
-      #wheel-container {
-        width: 200px;
-        height: 200px;
-      }
-
-      #wheel {
-        font-size: 10px;
-      }
-    }
-
-    .separator {
+    /* Separators */
+    .winners-separator {
       width: 80%;
-      max-width: 800px;
+      max-width: 500px;
       margin: 50px auto;
-      height: 2px;
+      height: 3px;
       background: linear-gradient(90deg, transparent, #1976D2, #42A5F5, #1976D2, transparent);
       position: relative;
+      opacity: 0.8;
     }
 
-    .separator::before {
-      content: '🎯';
+    .winners-separator::before {
+      content: '🏆';
       position: absolute;
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
       background: white;
       padding: 0 20px;
-      font-size: 24px;
+      font-size: 28px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
     }
 
     .prize-pool-separator {
       width: 80%;
-      max-width: 800px;
+      max-width: 500px;
       margin: 50px auto;
       height: 3px;
       background: linear-gradient(90deg, transparent, #ffd700, #ff6b6b, #ffd700, transparent);
@@ -707,122 +770,42 @@
       background: white;
       padding: 0 20px;
       font-size: 28px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
     }
 
-    #winners-log {
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 25px;
-      background: linear-gradient(145deg, #ffffff, #f8f9fa);
-      border-radius: 15px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.08);
-    }
-
-    #winners-log h2 {
-      color: #1976D2;
-      text-align: center;
-      font-size: 1.8em;
-      margin-bottom: 20px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      position: relative;
-      padding-bottom: 10px;
-    }
-
-    #winners-log h2::after {
+    .prize-pool-separator::after,
+    .winners-separator::after {
       content: '';
       position: absolute;
-      bottom: 0;
+      top: 50%;
       left: 50%;
-      transform: translateX(-50%);
-      width: 100px;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, #1976D2, transparent);
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 60px;
+      background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+      z-index: -1;
     }
 
+    /* Winner's log card fixes */
     .winner-entry {
-      padding: 12px 15px;
-      margin: 8px 0;
-      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      margin: 10px 0;
       background: white;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      transition: transform 0.2s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
+      border-radius: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      word-break: break-word;
+      overflow-wrap: break-word;
     }
 
-    .winner-info {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 4px;
-    }
-
-    .winner-name-container {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .winner-name {
-      font-weight: 600;
-      font-size: 1.1em;
-      color: #1976D2;
-    }
-
-    .winner-prize {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-style: normal;
-      font-weight: 600;
-      font-size: 1.1em;
-      color: #666;
-    }
-
-    .winner-entry.ultimate-winner-gold .winner-name,
-    .winner-entry.ultimate-winner-gold .winner-prize {
-      color: #3D2B00;
-      font-weight: 700;
-      text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-    }
-
-    .winner-entry.ultimate-winner-rare .winner-name,
-    .winner-entry.ultimate-winner-rare .winner-prize {
-      color: #4A0025;
-      font-weight: 700;
-      text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
-    }
-
-    .winner-timestamp {
-      font-size: 0.8em;
-      color: #999;
-      margin-top: 4px;
-      align-self: flex-end;
-    }
-
-    .winner-entry.ultimate-winner-gold .winner-timestamp {
-      color: rgba(61, 43, 0, 0.7);
-    }
-
-    .winner-entry.ultimate-winner-rare .winner-timestamp {
-      color: rgba(74, 0, 37, 0.7);
-    }
-
-    .prize-emoji {
-      font-size: 1.3em;
-      animation: emoji-bounce 1s infinite;
-    }
-
-    @keyframes emoji-bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-3px); }
-    }
-
-    .winner-content {
+    .winner-name, .winner-prize {
+      margin: 0 10px;
       flex: 1;
-      z-index: 1;
+      min-width: 0;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
 
     .winner-name {
@@ -1201,6 +1184,201 @@
     .admin-login:hover {
       opacity: 1;
     }
+
+    /* Common section styling */
+    .section-container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 10px;
+      width: 100%;
+    }
+
+    /* Section Titles */
+    .section-title {
+      text-align: center;
+      font-size: 2em;
+      margin: 30px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      max-width: 500px;
+      padding: 0 10px;
+    }
+
+    /* Prize list styling */
+    #prize-list {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 10px;
+    }
+
+    /* Winner's list styling */
+    #winners-container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 10px;
+    }
+
+    .section-separator {
+      width: 80%;
+      max-width: 500px;
+      margin: 50px auto;
+      height: 2px;
+    }
+
+    @media (max-width: 480px) {
+      .section-container,
+      #prize-list,
+      #winners-container {
+        padding: 5px;
+      }
+
+      .section-title {
+        padding: 0 5px;
+        margin: 20px auto;
+      }
+
+      .section-separator {
+        margin: 30px auto;
+      }
+    }
+
+    /* Prize emoji animations */
+    .winner-entry[data-prize-type="gold"] .emoji,
+    .winner-entry[data-prize-type="pink"] .emoji {
+      display: inline-block;
+      animation: prizeEmoji 2s infinite;
+      transform-origin: center;
+    }
+
+    @keyframes prizeEmoji {
+      0%, 100% {
+        transform: scale(1) rotate(0deg);
+      }
+      50% {
+        transform: scale(1.2) rotate(15deg);
+      }
+    }
+
+    #spin-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    #spin-btn[data-error]:disabled::after {
+      content: attr(data-error);
+      display: block;
+      font-size: 0.7em;
+      margin-top: 5px;
+      color: #ff6b6b;
+    }
+
+    /* Floating banner styles */
+    #result {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 15px 30px;
+      border-radius: 15px;
+      font-size: 1.2em;
+      font-weight: 600;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      z-index: 1000;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      background: linear-gradient(45deg, #2196F3, #1976D2);
+      color: white;
+      max-width: 90vw;
+      pointer-events: none;
+    }
+
+    #result.show-banner {
+      opacity: 1;
+      animation: floatIn 0.5s ease forwards;
+    }
+
+    #result.hide-banner {
+      animation: floatOut 0.5s ease forwards;
+    }
+
+    /* Special prize styles */
+    #result.ultimate-gold {
+      background: linear-gradient(45deg, #ffd700, #ff9d00);
+      animation: shimmerGold 2s infinite linear;
+      background-size: 200% 200%;
+    }
+
+    #result.ultimate-rare {
+      background: linear-gradient(45deg, #ff69b4, #ff1493);
+      animation: shimmerPink 2s infinite linear;
+      background-size: 200% 200%;
+    }
+
+    @keyframes floatIn {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+    }
+
+    @keyframes floatOut {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+      }
+    }
+
+    @keyframes shimmerGold {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    @keyframes shimmerPink {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    /* Prize emojis in banner */
+    #result .prize-emoji {
+      display: inline-block;
+      margin: 0 5px;
+      animation: bounce 1s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-5px);
+      }
+    }
   </style>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -1215,7 +1393,6 @@
       <div class="input-container">
         <input type="text" id="name-input" placeholder="Type your name here...">
       </div>
-      <button id="spin-btn" disabled>Spin the Wheel</button>
     </div>
     <div id="result" aria-live="polite"></div>
 
@@ -1224,20 +1401,30 @@
       <div class="pointer"></div>
       <canvas id="wheel" width="300" height="300"></canvas>
     </div>
+    
+    <button id="spin-btn" disabled>SPIN</button>
 
-    <div class="separator"></div>
+    <div class="section-separator"></div>
 
+    <h2 class="section-title">
+      <span class="emoji">🎮</span>
+      <span class="text">Winner's List</span>
+      <span class="emoji">🎯</span>
+    </h2>
     <div id="winners-log">
       <div class="winners-header">
-        <h2>🏆 Winners Log 🏆</h2>
         <button class="clear-button" onclick="clearEntries()">Clear All Entries</button>
       </div>
       <div id="winners-container"></div>
     </div>
 
-    <div class="prize-pool-separator"></div>
+    <div class="section-separator"></div>
 
-    <h2>Prize Pool and their Probability</h2>
+    <h2 class="section-title">
+      <span class="emoji">🎲</span>
+      <span class="text">Prize Pool</span>
+      <span class="emoji">🎰</span>
+    </h2>
     <div id="prize-list"></div>
 
     <div class="admin-login" onclick="adminLogin()">⚙️</div>
@@ -1314,18 +1501,43 @@
               
               // Get appropriate emoji based on prize
               let emoji = '🎉';
-              if (entry.prize.includes('Lovebite from Pengbee')) emoji = '👅';
-              else if (entry.prize.includes('Crab Army Sticker') && !entry.prize.includes('3')) emoji = '🦀';
-              else if (entry.prize.includes('25 Bonus Points')) emoji = '💎';
-              else if (entry.prize.includes('5 Bonus Points')) emoji = '💫';
-              else if (entry.prize.includes('Kiss from King Crab')) emoji = '💋';
-              else if (entry.prize.includes('Chetoes Sticker')) emoji = '🧀';
-              else if (entry.prize.includes('3 Crab Army Stickers')) emoji = '💎';
-              else if (entry.prize.includes('10 Bonus Points')) emoji = '🌟';
-              else if (entry.prize.includes('3 Bonus Points')) emoji = '✨';
-              else if (entry.prize.includes('2 Crab Army Stickers')) emoji = '🦀';
-              else if (entry.prize.includes('7 Crab Army Stickers')) emoji = '👑';
-              else if (entry.prize.includes('50 Bonus Points')) emoji = '💫';
+              let prizeType = '';
+              
+              if (entry.prize.includes('7 Crab Army Stickers')) {
+                emoji = '💎💎💎';
+                prizeType = 'pink';
+              } else if (entry.prize.includes('50 Bonus Points')) {
+                emoji = '💎💎💎';
+                prizeType = 'pink';
+              } else if (entry.prize.includes('Gold')) {
+                emoji = '🏆';
+                prizeType = 'gold';
+              } else if (entry.prize.includes('Lovebite from Pengbee')) {
+                emoji = '👅';
+              } else if (entry.prize.includes('Crab Army Sticker') && !entry.prize.includes('3')) {
+                emoji = '🦀';
+              } else if (entry.prize.includes('25 Bonus Points')) {
+                emoji = '💎';
+              } else if (entry.prize.includes('5 Bonus Points')) {
+                emoji = '💫';
+              } else if (entry.prize.includes('Kiss from King Crab')) {
+                emoji = '💋';
+              } else if (entry.prize.includes('Chetoes Sticker')) {
+                emoji = '🧀';
+              } else if (entry.prize.includes('3 Crab Army Stickers')) {
+                emoji = '💎';
+              } else if (entry.prize.includes('10 Bonus Points')) {
+                emoji = '🌟';
+              } else if (entry.prize.includes('3 Bonus Points')) {
+                emoji = '✨';
+              } else if (entry.prize.includes('2 Crab Army Stickers')) {
+                emoji = '🦀';
+              }
+              
+              // Set the prize type as a data attribute
+              if (prizeType) {
+                newRow.setAttribute('data-prize-type', prizeType);
+              }
               
               // Format the timestamp
               const timestamp = new Date(entry.timestamp);
@@ -1365,93 +1577,98 @@
       // Load winners on page load
       window.addEventListener('load', updateWinnerLog);
 
-      nameInput.addEventListener("input", () => {
-        const name = nameInput.value.trim();
-        
-        // Check if name exists in Firebase
-        database.ref('winners/' + name).once('value')
-          .then((snapshot) => {
-            const nameExists = snapshot.exists();
-            spinButton.disabled = name === "" || nameExists;
-            resultDiv.textContent = nameExists ? "You have already spun the wheel!" : "";
-          });
-      });
-
+      let isSpinning = false;
+      let usedNames = new Set();
       let currentRotation = 0;
 
-      spinButton.addEventListener("click", () => {
-        const name = nameInput.value.trim();
-        if (!name) return;
+      nameInput.addEventListener("input", function() {
+        const name = this.value.trim();
+        spinButton.disabled = !name || isSpinning || usedNames.has(name.toLowerCase());
+        
+        if (usedNames.has(name.toLowerCase())) {
+          spinButton.setAttribute('data-error', 'Cannot enter name twice');
+        } else {
+          spinButton.removeAttribute('data-error');
+        }
+      });
 
-        // Check if name exists before spinning
-        database.ref('winners/' + name).once('value').then((snapshot) => {
-          if (snapshot.exists()) {
-            resultDiv.textContent = "You have already spun the wheel!";
-            return;
+      async function spinWheel() {
+        const name = nameInput.value.trim();
+        if (!name || isSpinning || usedNames.has(name.toLowerCase())) return;
+        
+        isSpinning = true;
+        spinButton.disabled = true;
+        resultDiv.textContent = "";
+        resultDiv.className = ""; // Reset classes
+        
+        // Store the name
+        usedNames.add(name.toLowerCase());
+        
+        // Calculate spin rotation
+        const randomIndex = weightedRandomIndex();
+        const selectedPrize = prizes[randomIndex];
+        
+        // Calculate rotation to align the selected segment with the pointer
+        const segmentAngle = 360 / prizes.length;
+        const targetRotation = -(randomIndex * segmentAngle) + 80;
+        
+        // Add multiple full rotations plus the target rotation
+        const spinDegrees = currentRotation + 3600 + (targetRotation - (currentRotation % 360));
+        currentRotation = spinDegrees;
+        
+        // Apply the spin with transition
+        wheelCanvas.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.83, 0.67)';
+        wheelCanvas.style.transform = `rotate(${spinDegrees}deg)`;
+        
+        setTimeout(async () => {
+          const timestamp = Date.now();
+          await database.ref('winners').push({
+            name: name,
+            prize: selectedPrize.name,
+            timestamp: timestamp
+          });
+
+          // Create banner content with emojis
+          let bannerEmoji = '🎉';
+          let bannerClass = 'show-banner';
+          
+          if (selectedPrize.ultimateClass === 'ultimate-prize-gold') {
+            bannerEmoji = '🏆';
+            bannerClass += ' ultimate-gold';
+          } else if (selectedPrize.ultimateClass === 'ultimate-prize-rare') {
+            bannerEmoji = '💎💎💎';
+            bannerClass += ' ultimate-rare';
           }
 
-          spinButton.disabled = true;
-          resultDiv.textContent = "";
-          resultDiv.classList.remove('show-prize');
-
-          const randomIndex = weightedRandomIndex();
-          const selectedPrize = prizes[randomIndex];
-
-          // Get current rotation from the wheel's transform
-          const currentTransform = wheelCanvas.style.transform;
-          currentRotation = currentTransform ? parseInt(currentTransform.match(/rotate\(([-\d.]+)deg\)/)?.[1] || 0) : 0;
-
-          // Calculate rotation to align the selected segment with the pointer (at 80 degrees)
-          const segmentAngle = 360 / prizes.length;
-          const targetRotation = -(randomIndex * segmentAngle) + 80;
+          resultDiv.innerHTML = `
+            <span class="prize-emoji">${bannerEmoji}</span>
+            Congratulations ${name}!
+            <span class="prize-emoji">${bannerEmoji}</span>
+            <br>
+            You won ${selectedPrize.name}!
+          `;
           
-          // Add 10 full rotations (3600 degrees) plus what's needed to reach the target
-          const spinDegrees = currentRotation + 3600 + (targetRotation - (currentRotation % 360));
-
-          // Apply the spin
-          wheelCanvas.style.transform = `rotate(${spinDegrees}deg)`;
-
-          // Update the timeout to match the new spin duration (8 seconds)
+          resultDiv.className = bannerClass;
+          
+          // Hide banner after 10 seconds
           setTimeout(() => {
-            const isUltimate = selectedPrize.isUltimate;
-            const isUltimateRare = selectedPrize.ultimateClass === 'ultimate-prize-rare';
-            resultDiv.setAttribute('data-ultimate', isUltimate && !isUltimateRare);
-            resultDiv.setAttribute('data-ultimate-rare', isUltimateRare);
-            
-            // Create message with animated emojis
-            const message = `
-              <div class="prize-message">
-                <div class="emoji-container">
-                  <span class="prize-emoji">${isUltimateRare ? '👑' : '🎉'}</span>
-                  <span class="prize-emoji">${isUltimateRare ? '✨' : '🌟'}</span>
-                </div>
-                <span class="prize-text">Congratulations ${name}!</span>
-                <div class="emoji-container">
-                  <span class="prize-emoji">${isUltimateRare ? '✨' : '🌟'}</span>
-                  <span class="prize-emoji">${isUltimateRare ? '👑' : '🎉'}</span>
-                </div>
-              </div>
-              <div class="prize-message">
-                <span class="prize-text">You have won ${selectedPrize.name}</span>
-              </div>
-            `;
-            
-            resultDiv.innerHTML = message;
-            resultDiv.classList.add('show-prize');
-            const timestamp = Date.now();
-            const winData = {
-              prize: selectedPrize.name,
-              timestamp: timestamp
-            };
-            
-            // Save to Firebase
-            database.ref('winners/' + name).set(winData);
-            
-            nameInput.value = "";
-            spinButton.disabled = false;
-          }, 8000);  // Match the CSS transition duration
-        });
-      });
+            resultDiv.classList.add('hide-banner');
+            setTimeout(() => {
+              resultDiv.className = "";
+              resultDiv.textContent = "";
+            }, 500);
+          }, 10000);
+          
+          isSpinning = false;
+          nameInput.value = ''; // Clear the input
+          spinButton.disabled = true;
+          
+          // Update the winners log
+          updateWinnerLog();
+        }, 4000);
+      }
+
+      spinButton.addEventListener("click", spinWheel);
 
       function weightedRandomIndex() {
         // Calculate total probability
