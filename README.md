@@ -6,7 +6,7 @@ An interactive web-based prize wheel application for the game 'Real or Ruse' wit
 
 - Interactive spin wheel with weighted random selection
 - Real-time winner logging with Firebase
-- Special ultimate prizes (Golden and Rare Pink)
+- Special ultimate prizes (Golden and Legendary)
 - Beautiful animations and visual effects
 - Mobile-responsive design
 
@@ -14,19 +14,21 @@ An interactive web-based prize wheel application for the game 'Real or Ruse' wit
 
 ### Regular Prizes
 - Lovebite from Pengbee
-- Crab Army Sticker
-- 5 Bonus Points
 - Kiss from King Crab
 - Chetoes Sticker
+- Crab Army Sticker
 - 2 Crab Army Stickers
 - 10 Bonus Points
+- 5 Bonus Points
 - 3 Bonus Points
 
-### Ultimate Prizes
+### Special Prizes
+
 - Golden Prizes (1% chance)
   - 25 Bonus Points
   - 3 Crab Army Stickers
-- Rare Pink Prizes (0.0001% chance)
+    
+- Legendary Prizes (0.0001% chance)
   - 50 Bonus Points
   - 7 Crab Army Stickers
 
