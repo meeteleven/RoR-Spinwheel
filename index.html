@@ -27,35 +27,154 @@
     }
 
     .sticker {
-      position: absolute;
-      width: 100px;
-      height: 100px;
+      position: fixed;
+      width: 150px;
+      height: 150px;
       object-fit: contain;
       z-index: 0;
+      opacity: 1;
     }
 
     .sticker.top-left {
-      top: 50px;
-      left: -120px;
-      transform: rotate(-15deg);
+      top: 5%;
+      left: 5%;
+      transform: rotate(-15deg) scale(1.8);
+      z-index: 0;
     }
 
     .sticker.top-right {
-      top: 100px;
-      right: -120px;
-      transform: rotate(15deg);
+      top: 7%;
+      right: 5%;
+      transform: rotate(20deg) scale(1.3);
+      z-index: 0;
     }
 
     .sticker.bottom-left {
-      bottom: 100px;
-      left: -120px;
-      transform: rotate(-10deg);
+      bottom: 3%;
+      left: 3%;
+      transform: rotate(-25deg) scale(1.2);
+      z-index: 0;
     }
 
     .sticker.bottom-right {
-      bottom: 50px;
-      right: -120px;
-      transform: rotate(10deg);
+      bottom: 2%;
+      right: 3%;
+      transform: rotate(15deg) scale(0.85);
+      z-index: 0;
+    }
+
+    @media (max-width: 768px) {
+      .sticker {
+        width: 90px;
+        height: 90px;
+      }
+      .sticker.top-left { 
+        left: 2%;
+        top: 4%;
+        transform: rotate(-15deg) scale(1.8);
+      }
+      .sticker.top-right { 
+        right: 2%;
+        top: 6%;
+        transform: rotate(20deg) scale(1.3);
+      }
+      .sticker.bottom-left { 
+        left: 2%;
+        bottom: 2%;
+      }
+      .sticker.bottom-right { 
+        right: 2%;
+        bottom: 1%;
+      }
+    }
+
+    .title-section {
+      margin: 20px auto 40px;
+      padding: 20px;
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 600px;
+      background: linear-gradient(145deg, #ffffff, #f0f0f0);
+      border-radius: 20px;
+      box-shadow: 
+        5px 5px 15px rgba(0, 0, 0, 0.2),
+        -5px -5px 15px rgba(255, 255, 255, 0.7),
+        inset 3px 3px 5px rgba(255, 255, 255, 0.6),
+        inset -3px -3px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .main-title {
+      font-size: 2.8em;
+      font-weight: 900;
+      margin: 0;
+      background: linear-gradient(45deg, #2196F3, #1976D2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      position: relative;
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 768px) {
+      .main-title {
+        font-size: 2em;
+      }
+    }
+
+    .main-title::after {
+      display: none;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2em;
+      margin: 30px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      max-width: 500px;
+      padding: 0 10px;
+      position: relative;
+      padding-bottom: 15px;
+      margin-bottom: 25px;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #2196F3, transparent);
+      border-radius: 2px;
+    }
+
+    .section-title .text {
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      background: linear-gradient(45deg, #1976D2, #2196F3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-title .emoji {
+      font-size: 1.1em;
+      animation: floatEmoji 3s ease-in-out infinite;
+      background: none;
+      -webkit-background-clip: unset;
+      -webkit-text-fill-color: unset;
+    }
+
+    @keyframes floatEmoji {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
     }
 
     .wheel-container {
@@ -287,76 +406,6 @@
       100% { left: 200%; }
     }
 
-    /* Glowing Separator */
-    .section-separator {
-      width: 80%;
-      max-width: 500px;
-      margin: 50px auto;
-      height: 2px;
-      background: linear-gradient(90deg, 
-        transparent,
-        rgba(33, 150, 243, 0.8),
-        rgba(66, 165, 245, 1),
-        rgba(33, 150, 243, 0.8),
-        transparent
-      );
-      position: relative;
-      animation: separatorGlow 3s infinite;
-    }
-
-    @keyframes separatorGlow {
-      0%, 100% {
-        box-shadow: 
-          0 0 10px rgba(33, 150, 243, 0.3),
-          0 0 20px rgba(33, 150, 243, 0.2),
-          0 0 30px rgba(33, 150, 243, 0.1);
-        opacity: 1;
-      }
-      50% {
-        box-shadow: 
-          0 0 15px rgba(33, 150, 243, 0.4),
-          0 0 25px rgba(33, 150, 243, 0.3),
-          0 0 35px rgba(33, 150, 243, 0.2);
-        opacity: 0.8;
-      }
-    }
-
-    /* Section Titles */
-    .section-title {
-      text-align: center;
-      font-size: 2em;
-      margin: 30px auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-      max-width: 500px;
-      padding: 0 10px;
-    }
-
-    .section-title .text {
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      background: linear-gradient(45deg, #1976D2, #2196F3);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .section-title .emoji {
-      font-size: 1.1em;
-      animation: floatEmoji 3s ease-in-out infinite;
-      background: none;
-      -webkit-background-clip: unset;
-      -webkit-text-fill-color: unset;
-    }
-
-    @keyframes floatEmoji {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-5px); }
-    }
-
     /* Prize list styling */
     #prize-list {
       max-width: 500px;
@@ -443,55 +492,50 @@
     }
 
     .prize-item.ultimate-prize-rare {
-      background: linear-gradient(135deg, #FF69B4, #ffffff, #FF69B4);
-      background-size: 200% 200%;
-      color: #333;
+      background: linear-gradient(135deg, #FF69B4, #FF1493);
+      color: white;
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-      animation: shine 3s infinite;
+      animation: shine 2s infinite;
       border: 2px solid #FF69B4;
       box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
     }
 
-    @keyframes shine {
-      0% { background-position: 200% center; }
-      50% { background-position: 0% center; }
-      100% { background-position: -200% center; }
-    }
-
     .prize-item.ultimate-prize-gold::before,
     .prize-item.ultimate-prize-rare::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: -100%;
-      width: 100%;
+      width: 50%;
       height: 100%;
       background: linear-gradient(
         120deg,
         transparent,
-        rgba(255, 255, 255, 0.6),
+        rgba(255, 255, 255, 0.4),
         transparent
       );
       animation: shine-effect 2s infinite;
     }
 
-    @keyframes shine-effect {
-      0% { left: -100%; }
-      100% { left: 200%; }
-    }
-
     .prize-item.ultimate-prize-gold .prize-probability,
     .prize-item.ultimate-prize-rare .prize-probability {
-      background: rgba(255, 255, 255, 0.3);
-      font-weight: bold;
+      background: rgba(255, 255, 255, 0.25);
+      color: white;
+      font-weight: 600;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.9em;
+      backdrop-filter: blur(2px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .prize-item.ultimate-prize-gold .prize-probability {
-      color: #B8860B;
+      border: 1px solid rgba(255, 215, 0, 0.4);
     }
 
     .prize-item.ultimate-prize-rare .prize-probability {
-      color: #FF1493;
+      border: 1px solid rgba(255, 105, 180, 0.4);
     }
 
     .prize-item.ultimate-prize-gold .prize-name {
@@ -631,64 +675,6 @@
     .validation-message.show {
       opacity: 1;
       transform: translateY(0);
-    }
-
-    /* Separators */
-    .winners-separator {
-      width: 80%;
-      max-width: 500px;
-      margin: 50px auto;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, #1976D2, #42A5F5, #1976D2, transparent);
-      position: relative;
-      opacity: 0.8;
-    }
-
-    .winners-separator::before {
-      content: '🏆';
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      padding: 0 20px;
-      font-size: 28px;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-    }
-
-    .prize-pool-separator {
-      width: 80%;
-      max-width: 500px;
-      margin: 50px auto;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, #ffd700, #ff6b6b, #ffd700, transparent);
-      position: relative;
-      opacity: 0.9;
-    }
-
-    .prize-pool-separator::before {
-      content: '🎰';
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      padding: 0 20px;
-      font-size: 28px;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-    }
-
-    .prize-pool-separator::after,
-    .winners-separator::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 60px;
-      height: 60px;
-      background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
-      z-index: -1;
     }
 
     /* Winner's log card fixes */
@@ -857,6 +843,95 @@
 
     .admin-login:hover {
       opacity: 1;
+    }
+
+    /* Floating banner styles */
+    #result {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 15px 30px;
+      border-radius: 15px;
+      font-size: 1.2em;
+      font-weight: 600;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      z-index: 1000;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      background: linear-gradient(45deg, #2196F3, #1976D2);
+      color: white;
+      max-width: 90vw;
+      pointer-events: none;
+    }
+
+    #result.show-banner {
+      opacity: 1;
+      animation: floatIn 0.5s ease forwards;
+    }
+
+    #result.hide-banner {
+      animation: floatOut 0.5s ease forwards;
+    }
+
+    /* Special prize styles */
+    #result.ultimate-gold {
+      background: linear-gradient(45deg, #ffd700, #ff9d00);
+      animation: shimmerGold 2s infinite linear;
+      background-size: 200% 200%;
+    }
+
+    #result.ultimate-rare {
+      background: linear-gradient(45deg, #FF69B4, #FF1493);
+      animation: shimmerPink 2s infinite linear;
+      background-size: 200% 200%;
+    }
+
+    @keyframes floatIn {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+    }
+
+    @keyframes floatOut {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+      }
+    }
+
+    @keyframes shimmerGold {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes shimmerPink {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Prize emojis in banner */
+    #result .prize-emoji {
+      display: inline-block;
+      margin: 0 5px;
+      animation: bounce 1s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
     }
 
     /* Enhanced Winner Message Styles */
@@ -1055,15 +1130,164 @@
     }
 
     /* Sticker styles */
+    /* Special Prize Winner Cards */
+    .winner-entry.ultimate-winner-gold {
+      background: linear-gradient(135deg, #ffd700, #ff6b6b) !important;
+      border: 2px solid #ffd700;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+      animation: shine 2s infinite;
+      padding: 12px 15px;
+    }
+
+    .winner-entry.ultimate-winner-gold .winner-name,
+    .winner-entry.ultimate-winner-gold .winner-prize,
+    .winner-entry.ultimate-winner-rare .winner-name,
+    .winner-entry.ultimate-winner-rare .winner-prize {
+      color: white !important;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .winner-entry.ultimate-winner-rare {
+      background: linear-gradient(135deg, #FF69B4, #FF1493) !important;
+      background-size: 200% 200%;
+      border: 2px solid #FF69B4;
+      box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+      position: relative;
+      overflow: hidden;
+      animation: shine 2s infinite;
+      padding: 12px 15px;
+    }
+
+    /* Emoji animations for special cards */
+    .winner-entry.ultimate-winner-gold .winner-emoji,
+    .winner-entry.ultimate-winner-rare .winner-emoji {
+      animation: spinPop 2s ease-in-out infinite;
+      transform-origin: center;
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .winner-entry.ultimate-winner-gold .winner-emoji {
+      filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.8));
+    }
+
+    .winner-entry.ultimate-winner-rare .winner-emoji {
+      filter: drop-shadow(0 0 6px rgba(255, 105, 180, 0.8));
+    }
+
+    @keyframes spinPop {
+      0% {
+        transform: rotate(0deg) scale(1);
+      }
+      30% {
+        transform: rotate(360deg) scale(1.2);
+      }
+      40% {
+        transform: rotate(360deg) scale(0.8);
+      }
+      50% {
+        transform: rotate(360deg) scale(1.4);
+      }
+      60% {
+        transform: rotate(360deg) scale(1);
+      }
+      100% {
+        transform: rotate(360deg) scale(1);
+      }
+    }
+
+    /* Add pulse effect on hover */
+    .winner-entry.ultimate-winner-gold:hover .winner-emoji,
+    .winner-entry.ultimate-winner-rare:hover .winner-emoji {
+      animation: pulseEmoji 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+
+    @keyframes pulseEmoji {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.3) rotate(15deg);
+        opacity: 0.7;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Override alternating colors for special cards */
+    .winner-entry:nth-child(odd).ultimate-winner-gold,
+    .winner-entry:nth-child(even).ultimate-winner-gold,
+    .winner-entry:nth-child(odd).ultimate-winner-rare,
+    .winner-entry:nth-child(even).ultimate-winner-rare {
+      border-left: none;
+    }
+
+    /* Shine effect for special cards */
+    .winner-entry.ultimate-winner-gold::before,
+    .winner-entry.ultimate-winner-rare::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.4),
+        transparent
+      );
+      animation: shine-effect 2s infinite;
+    }
+
+    @keyframes shine {
+      0% { background-position: 200% center; }
+      50% { background-position: 0% center; }
+      100% { background-position: -200% center; }
+    }
+
+    @keyframes shine-effect {
+      100% {
+        left: 200%;
+      }
+    }
+
+    /* Prize pool emoji animations */
+    .prize-item.ultimate-prize-gold .prize-emoji,
+    .prize-item.ultimate-prize-rare .prize-emoji {
+      animation: spinPop 2s ease-in-out infinite;
+      transform-origin: center;
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .prize-item.ultimate-prize-gold .prize-emoji {
+      filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.8));
+    }
+
+    .prize-item.ultimate-prize-rare .prize-emoji {
+      filter: drop-shadow(0 0 6px rgba(255, 105, 180, 0.8));
+    }
+
+    /* Add pulse effect on hover for prize pool */
+    .prize-item.ultimate-prize-gold:hover .prize-emoji,
+    .prize-item.ultimate-prize-rare:hover .prize-emoji {
+      animation: pulseEmoji 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
   </style>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
 <body>
   <div class="main-container">
-    <img src="https://raw.githubusercontent.com/meeteleven/RoR-Spinwheel/main/images/kingcrab.png" class="sticker top-left" alt="King Crab Sticker">
+    <img src="https://raw.githubusercontent.com/meeteleven/RoR-Spinwheel/main/images/chetoes.png" class="sticker top-left" alt="Chetoes Sticker">
     <img src="https://raw.githubusercontent.com/meeteleven/RoR-Spinwheel/main/images/crabarmy.png" class="sticker top-right" alt="Crab Army Sticker">
-    <img src="https://raw.githubusercontent.com/meeteleven/RoR-Spinwheel/main/images/chetoes.png" class="sticker bottom-left" alt="Chetoes Sticker">
+    <img src="https://raw.githubusercontent.com/meeteleven/RoR-Spinwheel/main/images/kingcrab.png" class="sticker bottom-left" alt="King Crab Sticker">
     <img src="https://raw.githubusercontent.com/meeteleven/RoR-Spinwheel/main/images/snail.png" class="sticker bottom-right" alt="Snail Sticker">
     <div class="title-section">
       <h1 class="main-title">RoR Spinwheel</h1>
@@ -1083,8 +1307,6 @@
     
     <button id="spin-btn" disabled>SPIN</button>
 
-    <div class="section-separator"></div>
-
     <h2 class="section-title">
       <span class="emoji">🏆</span>
       <span class="text">Winner's List</span>
@@ -1096,8 +1318,6 @@
       </div>
       <div id="winners-container"></div>
     </div>
-
-    <div class="section-separator"></div>
 
     <h2 class="section-title">
       <span class="emoji">🎁</span>
@@ -1192,6 +1412,13 @@
                 } else if (prize.ultimateClass === 'ultimate-prize-rare') {
                   newRow.classList.add('ultimate-winner-rare');
                 }
+              }
+              
+              // Add premium class for special prizes
+              if (entry.prize.includes('7 Crab Army Stickers') || entry.prize.includes('50 Bonus Points')) {
+                newRow.classList.add('ultimate-winner-rare');
+              } else if (entry.prize.includes('25 Bonus Points') || entry.prize.includes('3 Crab Army Stickers') || entry.prize.includes('Gold')) {
+                newRow.classList.add('ultimate-winner-gold');
               }
               
               // Get appropriate emoji
