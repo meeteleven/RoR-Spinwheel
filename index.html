@@ -468,6 +468,8 @@
       width: 100%;
       display: flex;
       justify-content: center;
+      flex-direction: column;
+      align-items: center;
     }
 
     .input-label {
@@ -539,6 +541,25 @@
     #name-input::placeholder {
       color: #999;
       font-style: italic;
+    }
+
+    .validation-message {
+      color: #ff4444;
+      font-size: 14px;
+      margin-top: 8px;
+      font-weight: 500;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+      text-align: center;
+      position: absolute;
+      bottom: -25px;
+      width: 100%;
+    }
+
+    .validation-message.show {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     /* Separators */
@@ -1416,44 +1437,46 @@
       const usedNames = new Set();
       let lastUpdateTime = 0;
 
+      // Function to remove duplicates and sort entries
+      function processWinnerEntries(snapshot) {
+        const nameMap = new Map();
+        
+        // Convert snapshot to array and sort by timestamp (newest first)
+        const entries = [];
+        snapshot.forEach((childSnapshot) => {
+          entries.push(childSnapshot.val());
+        });
+        entries.sort((a, b) => b.timestamp - a.timestamp);
+        
+        // Keep only the latest entry for each name
+        entries.forEach(entry => {
+          const nameLower = entry.name.toLowerCase().trim();
+          if (!nameMap.has(nameLower)) {
+            nameMap.set(nameLower, entry);
+          }
+        });
+        
+        return Array.from(nameMap.values())
+          .sort((a, b) => b.timestamp - a.timestamp)
+          .slice(0, 50);
+      }
+
       function updateWinnerLog() {
         const now = Date.now();
-        if (now - lastUpdateTime < 1000) return; // Prevent rapid updates
+        if (now - lastUpdateTime < 1000) return;
         lastUpdateTime = now;
         
         const winnersContainer = document.getElementById("winners-container");
         winnersContainer.innerHTML = '';
         
-        database.ref('winners').orderByChild('timestamp').limitToLast(50).once('value')
+        database.ref('winners').orderByChild('timestamp').once('value')
           .then((snapshot) => {
-            const entries = [];
-            const seenNames = new Set();
+            const uniqueEntries = processWinnerEntries(snapshot);
             
-            snapshot.forEach((childSnapshot) => {
-              entries.push({
-                name: childSnapshot.val().name,
-                prize: childSnapshot.val().prize,
-                timestamp: childSnapshot.val().timestamp
-              });
-            });
-            
-            // Sort by timestamp (newest first)
-            entries.sort((a, b) => b.timestamp - a.timestamp);
-            
-            // Create a new array with only unique names (keeping most recent)
-            const uniqueEntries = [];
-            entries.forEach(entry => {
-              const nameLower = entry.name.toLowerCase();
-              if (!seenNames.has(nameLower)) {
-                seenNames.add(nameLower);
-                uniqueEntries.push(entry);
-              }
-            });
-            
-            // Update the usedNames Set for spin validation
+            // Update usedNames Set
             usedNames.clear();
             uniqueEntries.forEach(entry => {
-              usedNames.add(entry.name.toLowerCase());
+              usedNames.add(entry.name.toLowerCase().trim());
             });
             
             // Display entries
@@ -1520,8 +1543,20 @@
         updateWinnerLog();
       });
 
-      // Initial load
-      updateWinnerLog();
+      // Initial load of winners
+      database.ref('winners').orderByChild('timestamp').once('value')
+        .then((snapshot) => {
+          const uniqueEntries = processWinnerEntries(snapshot);
+          usedNames.clear();
+          uniqueEntries.forEach(entry => {
+            usedNames.add(entry.name.toLowerCase().trim());
+          });
+        });
+
+      // Listen for real-time updates
+      database.ref('winners').on('child_added', (snapshot) => {
+        updateWinnerLog();
+      });
 
       const prizes = [
         { name: "a Lovebite from Pengbee", color: "#1565C0", probability: 30 }, // Darker Blue
@@ -1546,12 +1581,22 @@
         const nameExists = usedNames.has(name);
         spinButton.disabled = !name || isSpinning || nameExists;
         
+        const validationMessage = this.parentElement.querySelector('.validation-message') || (() => {
+          const msg = document.createElement('div');
+          msg.className = 'validation-message';
+          msg.textContent = 'You have already spun the wheel!';
+          this.parentElement.appendChild(msg);
+          return msg;
+        })();
+        
         if (nameExists) {
           spinButton.setAttribute('data-error', 'This name has already spun the wheel');
           nameInput.classList.add('error');
+          validationMessage.classList.add('show');
         } else {
           spinButton.removeAttribute('data-error');
           nameInput.classList.remove('error');
+          validationMessage.classList.remove('show');
         }
       });
 
