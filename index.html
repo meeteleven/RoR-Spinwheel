@@ -14,55 +14,126 @@
     }
 
     .main-container {
+      position: relative;
       max-width: 800px;
       margin: 0 auto;
       padding: 20px;
+      min-height: 100vh;
     }
 
-    .title-section {
-      max-width: 600px;
-      margin: 20px auto 40px;
-      padding: 25px;
-      background: linear-gradient(145deg, #ffffff, #f0f0f0);
-      border-radius: 15px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    .title-section, .input-section, #result, .wheel-container, #spin-btn, #winners-log, #prize-list {
+      position: relative;
+      z-index: 1;
     }
 
-    .main-title {
-      font-size: 2.2em;
-      font-weight: 800;
-      background: linear-gradient(45deg, #1E88E5, #1565C0);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin: 0;
+    .sticker {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      z-index: 0;
     }
 
-    @media (max-width: 400px) {
-      .main-title {
-        font-size: 1.8em;
-      }
+    .sticker.top-left {
+      top: 50px;
+      left: -120px;
+      transform: rotate(-15deg);
     }
 
-    .spinning-emoji {
-      display: inline-block;
-      animation: spin 4s linear infinite;
-      margin: 0 10px;
+    .sticker.top-right {
+      top: 100px;
+      right: -120px;
+      transform: rotate(15deg);
     }
 
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+    .sticker.bottom-left {
+      bottom: 100px;
+      left: -120px;
+      transform: rotate(-10deg);
     }
 
-    h1 {
-      font-weight: bold;
-      margin-bottom: 20px;
+    .sticker.bottom-right {
+      bottom: 50px;
+      right: -120px;
+      transform: rotate(10deg);
     }
 
-    label, input, button {
-      font-size: 16px;
-      margin-bottom: 10px;
-      display: block;
+    .wheel-container {
+      position: relative;
+      margin: 20px auto 60px;
+      width: min(280px, 75vw);
+      height: min(280px, 75vw);
+      filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.2));
+      transition: filter 0.3s ease;
+      transform: translateX(-10px);
+    }
+
+    .wheel-container:hover {
+      filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.25));
+    }
+
+    #wheel {
+      border-radius: 50%;
+      box-shadow: 
+        0 0 0 12px rgba(255, 255, 255, 0.8),
+        0 0 0 13px rgba(0, 0, 0, 0.1),
+        inset 0 0 25px rgba(0, 0, 0, 0.2);
+      transition: transform 8s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+      transform-origin: center;
+      will-change: transform;
+    }
+
+    .pointer {
+      position: absolute;
+      top: 50%;
+      right: -40px;
+      transform: translateY(-50%);
+      width: 35px;
+      height: 35px;
+      background: linear-gradient(135deg, #ffd700, #ff6b6b);
+      clip-path: polygon(0 50%, 100% 0, 100% 100%);
+      z-index: 100;
+      filter: drop-shadow(0 0 0 3px white) 
+              drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+      animation: breathe 2s ease-in-out infinite;
+      isolation: isolate;
+    }
+
+    .pointer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: inherit;
+      clip-path: inherit;
+      filter: blur(6px);
+      opacity: 0.7;
+      z-index: -1;
+    }
+
+    .pointer::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 10px;
+      height: 10px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    @keyframes breathe {
+      0%, 100% { transform: translateY(-50%) scale(1); }
+      50% { transform: translateY(-50%) scale(1.1); }
+    }
+
+    @keyframes pointerPulse {
+      0%, 100% { transform: translateY(-50%) scale(1); }
+      50% { transform: translateY(-50%) scale(1.1); }
     }
 
     /* Enhanced wheel and pointer styles */
@@ -983,388 +1054,17 @@
       opacity: 1;
     }
 
-    /* Common section styling */
-    .section-container {
-      max-width: 500px;
-      margin: 0 auto;
-      padding: 10px;
-      width: 100%;
-    }
-
-    /* Section Titles */
-    .section-title {
-      text-align: center;
-      font-size: 2em;
-      margin: 30px auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-      max-width: 500px;
-      padding: 0 10px;
-    }
-
-    /* Prize list styling */
-    #prize-list {
-      max-width: 500px;
-      margin: 0 auto;
-      padding: 10px;
-    }
-
-    /* Winner's list styling */
-    #winners-container {
-      max-width: 500px;
-      margin: 0 auto;
-      padding: 12px;
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      max-height: 400px;
-      overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: #1976D2 #f0f0f0;
-    }
-
-    #winners-container::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    #winners-container::-webkit-scrollbar-track {
-      background: #f0f0f0;
-      border-radius: 10px;
-    }
-
-    #winners-container::-webkit-scrollbar-thumb {
-      background: #1976D2;
-      border-radius: 10px;
-    }
-
-    #winners-container::-webkit-scrollbar-thumb:hover {
-      background: #1565C0;
-    }
-
-    .winner-entry {
-      background: #f8f9fa;
-      border-radius: 6px;
-      padding: 6px 10px;
-      margin: 3px 2px;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      transition: all 0.2s ease;
-    }
-
-    .winner-info {
-      display: flex;
-      align-items: center;
-      width: 100%;
-      gap: 6px;
-    }
-
-    .winner-name-container {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      min-width: 0;
-      flex: 0 1 auto;
-    }
-
-    .prize-emoji {
-      font-size: 13px;
-      line-height: 1;
-      flex-shrink: 0;
-    }
-
-    .winner-name {
-      font-size: 12px;
-      font-weight: 600;
-      color: #1976D2;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .winner-prize {
-      font-size: 11px;
-      color: #666;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      flex: 1;
-    }
-
-    .winner-timestamp {
-      font-size: 10px;
-      color: #999;
-      align-self: flex-end;
-    }
-
-    @media (max-width: 480px) {
-      .winner-entry {
-        padding: 4px 8px;
-        margin: 2px 1px;
-      }
-
-      .winner-info {
-        flex-wrap: wrap;
-        gap: 2px;
-      }
-
-      .winner-name-container {
-        flex: 1 1 100%;
-      }
-
-      .winner-prize {
-        font-size: 9px;
-        white-space: normal;
-        line-height: 1.2;
-      }
-
-      .winner-name {
-        font-size: 10px;
-        white-space: normal;
-        line-height: 1.2;
-      }
-
-      .winner-timestamp {
-        font-size: 8px;
-        margin-top: 1px;
-      }
-
-      .prize-emoji {
-        font-size: 10px;
-      }
-    }
-
-    .ultimate-winner-gold {
-      background: linear-gradient(135deg, #ffd700, #ff6b6b);
-      color: white;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-      animation: shine 2s infinite;
-      border: 2px solid #ffd700;
-      box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-      position: relative;
-      overflow: hidden;
-      background-size: 200% 200%;
-      transform-style: preserve-3d;
-      perspective: 1000px;
-    }
-
-    .ultimate-winner-gold::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(
-        120deg,
-        transparent,
-        rgba(255, 255, 255, 0.6),
-        transparent
-      );
-      animation: shine 2s infinite;
-    }
-
-    .ultimate-winner-gold .winner-name {
-      color: white;
-      -webkit-text-fill-color: white;
-      background: none;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .ultimate-winner-gold .winner-prize {
-      color: white;
-      font-weight: 600;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-    }
-
-    .ultimate-winner-gold .prize-emoji {
-      font-size: 1.4em;
-      animation: floatIconGold 2s ease-in-out infinite;
-      filter: drop-shadow(0 0 10px rgba(255,215,0,0.8));
-    }
-
-    .ultimate-winner-rare {
-      background: linear-gradient(135deg, #FF69B4, #ffffff, #FF69B4);
-      background-size: 200% 200%;
-      color: #333;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-      animation: shine 3s infinite;
-      border: 2px solid #FF69B4;
-      box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
-      position: relative;
-      overflow: hidden;
-      transform-style: preserve-3d;
-      perspective: 1000px;
-    }
-
-    .ultimate-winner-rare::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(
-        120deg,
-        transparent,
-        rgba(255, 255, 255, 0.6),
-        transparent
-      );
-      animation: shine 3s infinite;
-    }
-
-    .ultimate-winner-rare .winner-name {
-      color: #333;
-      -webkit-text-fill-color: #333;
-      background: none;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .ultimate-winner-rare .winner-prize {
-      color: #333;
-      font-weight: 600;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-    }
-
-    .ultimate-winner-rare .prize-emoji {
-      font-size: 1.4em;
-      animation: floatIconRare 2s ease-in-out infinite;
-      filter: drop-shadow(0 0 10px rgba(255,105,180,0.8));
-    }
-
-    @keyframes shine {
-      0% { background-position: 200% center; }
-      50% { background-position: 0% center; }
-      100% { background-position: -200% center; }
-    }
-
-    @keyframes floatIconGold {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-3px); }
-    }
-
-    @keyframes floatIconRare {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-3px); }
-    }
-
-    /* Floating banner styles */
-    #result {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 15px 30px;
-      border-radius: 15px;
-      font-size: 1.2em;
-      font-weight: 600;
-      text-align: center;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-      z-index: 1000;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-      background: linear-gradient(45deg, #2196F3, #1976D2);
-      color: white;
-      max-width: 90vw;
-      pointer-events: none;
-    }
-
-    #result.show-banner {
-      opacity: 1;
-      animation: floatIn 0.5s ease forwards;
-    }
-
-    #result.hide-banner {
-      animation: floatOut 0.5s ease forwards;
-    }
-
-    /* Special prize styles */
-    #result.ultimate-gold {
-      background: linear-gradient(45deg, #ffd700, #ff9d00);
-      animation: shimmerGold 2s infinite linear;
-      background-size: 200% 200%;
-    }
-
-    #result.ultimate-rare {
-      background: linear-gradient(45deg, #ff69b4, #ff1493);
-      animation: shimmerPink 2s infinite linear;
-      background-size: 200% 200%;
-    }
-
-    @keyframes floatIn {
-      0% {
-        opacity: 0;
-        transform: translate(-50%, -20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translate(-50%, 0);
-      }
-    }
-
-    @keyframes floatOut {
-      0% {
-        opacity: 1;
-        transform: translate(-50%, 0);
-      }
-      100% {
-        opacity: 0;
-        transform: translate(-50%, -20px);
-      }
-    }
-
-    @keyframes shimmerGold {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
-    }
-
-    @keyframes shimmerPink {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
-    }
-
-    /* Prize emojis in banner */
-    #result .prize-emoji {
-      display: inline-block;
-      margin: 0 5px;
-      animation: bounce 1s infinite;
-    }
-
-    @keyframes bounce {
-      0%, 100% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(-5px);
-      }
-    }
+    /* Sticker styles */
   </style>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
 <body>
   <div class="main-container">
+    <img src="https://raw.githubusercontent.com/meeteleven/RoR-Spinwheel/main/images/kingcrab.png" class="sticker top-left" alt="King Crab Sticker">
+    <img src="https://raw.githubusercontent.com/meeteleven/RoR-Spinwheel/main/images/crabarmy.png" class="sticker top-right" alt="Crab Army Sticker">
+    <img src="https://raw.githubusercontent.com/meeteleven/RoR-Spinwheel/main/images/chetoes.png" class="sticker bottom-left" alt="Chetoes Sticker">
+    <img src="https://raw.githubusercontent.com/meeteleven/RoR-Spinwheel/main/images/snail.png" class="sticker bottom-right" alt="Snail Sticker">
     <div class="title-section">
       <h1 class="main-title">RoR Spinwheel</h1>
     </div>
@@ -1386,9 +1086,9 @@
     <div class="section-separator"></div>
 
     <h2 class="section-title">
-      <span class="emoji">🎮</span>
+      <span class="emoji">🏆</span>
       <span class="text">Winner's List</span>
-      <span class="emoji">🎯</span>
+      <span class="emoji">🏆</span>
     </h2>
     <div id="winners-log">
       <div class="winners-header">
@@ -1400,9 +1100,9 @@
     <div class="section-separator"></div>
 
     <h2 class="section-title">
-      <span class="emoji">🎲</span>
+      <span class="emoji">🎁</span>
       <span class="text">Prize Pool</span>
-      <span class="emoji">🎰</span>
+      <span class="emoji">🎁</span>
     </h2>
     <div id="prize-list"></div>
 
